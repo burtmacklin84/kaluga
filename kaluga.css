@@ -621,12 +621,17 @@
   /* =====================================================================
      SERIES PAGE
      ===================================================================== */
-  body#series .box .body { padding: 0; }
-  body#series .box .body img { margin: 0; width: 100%; height: auto; display: block; }
-  body#series .sidebar .box div > img { margin: 0; width: 100%; display: block; }
-  body#series .sidebar .box img[alt], body#series .sidebar .box .pad img { border-radius: 0; }
-  body#series .sidebar table td { padding: 6px 14px; border: 0; }
-  body#series #playbutton { filter: drop-shadow(0 4px 12px rgba(0,0,0,.6)); }
+  /* NOTE: series.php pages carry body id="torrents" (there is NO body#series
+     on the live site) — these rules are scoped structurally instead. */
+  /* fan-art card: the backdrop fills the card, flush to its edges */
+  .box.center > .body:has(> img[onload^="Scale"]) { padding: 0; }
+  .box.center > .body > img[onload^="Scale"] { margin: 0; }
+  /* sidebar poster cards (series + torrent detail markup variants) */
+  .sidebar .box div > img[onload^="Scale"] { margin: 0; }
+  .sidebar .box > div[style*="position: relative"]:has(> img[onload^="Scale"]) { padding: 0 !important; }
+  .sidebar .box img[alt], .sidebar .box .pad img { border-radius: 0; }
+  body#torrents .sidebar table td { padding: 6px 14px; border: 0; }
+  #playbutton { filter: drop-shadow(0 4px 12px rgba(0,0,0,.6)); }
 
   /* =====================================================================
      INDEX / HOME  (ported + modernised from the base's per-page rules)
@@ -1933,7 +1938,7 @@
   /* series page: banner as hero, fan art fills its card (Scale() inline-sizes it).
      The wrapper is matched structurally (:has) — its inline style varies with the
      trailer-position setting, which is what made the banner intermittently load small. */
-  body#series center > div:has(> h2 > #banner), center > div:has(> h2 > #banner) {
+  center > div:has(> h2 > #banner) {
     max-width: none !important;
     height: auto !important;
     max-height: none !important;
@@ -1944,7 +1949,15 @@
     border-radius: var(--m-radius);
     box-shadow: 0 12px 40px rgba(0,0,0,.45);
   }
-  body#series .box .body img { width: 100% !important; height: auto !important; }
+  /* Scale()-managed images: CSS owns the size, so the onload race can never
+     leave them small — !important beats both the width attribute and any
+     inline size the script writes */
+  .box.center > .body > img[onload^="Scale"],
+  .sidebar .box img[onload^="Scale"] {
+    width: 100% !important;
+    height: auto !important;
+    display: block !important;
+  }
 
   /* ---- format tags (BTN Highlighter userscript hooks) ----
      Hues follow the user's long-standing Stylus palette, tuned for this theme.
