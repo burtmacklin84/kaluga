@@ -35,6 +35,9 @@
     --gc-max-width: 1800px;
     --gc-width: min(94vw, var(--gc-max-width));
     --gc-sidebar: 290px;
+    /* the main↔sidebar gap mirrors the browser-edge gutter, so the three
+       gaps across the page read as one consistent rhythm */
+    --m-col-gap: calc((100vw - var(--gc-width)) / 2);
   }
 
   /* ---------- Reset / base ---------- */
@@ -113,7 +116,7 @@
      .sidebar / .main_column below .thin, so the columns fell out of the grid and
      stacked full-width. Floats target the classes directly, at any depth, which
      is what the original theme relied on.) */
-  .main_column { float: left; width: calc(var(--gc-width) - var(--gc-sidebar) - var(--m-gap)); }
+  .main_column { float: left; width: calc(var(--gc-width) - var(--gc-sidebar) - var(--m-col-gap)); }
   .sidebar { float: right; width: var(--gc-sidebar); }
   #content .thin::after, .home::after { content: ""; display: table; clear: both; }
   /* home flips the columns: narrow sidebar LEFT, wide main RIGHT */
@@ -2013,8 +2016,7 @@
   }
   .torrent_table tr.group_torrent td:has(a[href*="torrentid"]) > span:first-child {
     order: 2;
-    margin-left: auto;
-    margin-right: min(12%, 160px);
+    margin-left: auto;   /* flush right — directly beside the SIZE column */
   }
 
   /* torrent detail page: banner + poster get the series-page treatment
