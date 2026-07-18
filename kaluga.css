@@ -2003,15 +2003,30 @@
   td:has(a.tor_highlight_seed) { color: #52e04a; }
   td:has(a.tor_highlight_snatch) { color: #e84c4c; }
 
-  /* episode format cell: one line, and the [DL | MG …] action block sits right
-     after the format tags instead of floating to the far edge of the wide page */
+  /* episode format cell: one line; the [DL | MG …] action block stays a
+     right-aligned column but is pulled in from the far edge of the wide page */
   .torrent_table tr.group_torrent td:has(a[href*="torrentid"]) {
     white-space: nowrap;
     display: flex;
     align-items: center;
     gap: 20px;
   }
-  .torrent_table tr.group_torrent td:has(a[href*="torrentid"]) > span:first-child { order: 2; }
+  .torrent_table tr.group_torrent td:has(a[href*="torrentid"]) > span:first-child {
+    order: 2;
+    margin-left: auto;
+    margin-right: min(12%, 160px);
+  }
+
+  /* torrent detail page: banner + poster get the series-page treatment
+     (banner has no #banner id here; poster sits in .box > p with a width attr) */
+  .thin > h2 > a > img {
+    width: min(100%, 1000px);
+    height: auto;
+    border-radius: var(--m-radius);
+    box-shadow: 0 12px 40px rgba(0,0,0,.45);
+  }
+  .sidebar .box > p:has(> a > img) { margin: 0; }
+  .sidebar .box > p > a > img { width: 100%; height: auto; display: block; }
 
   /* index featured posts breathe like the old theme
      (scoped via .home, not body#index — the id is unreliable; the New Series
