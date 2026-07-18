@@ -498,6 +498,18 @@
   .episode:hover, .torrent_table .discog .episode a:hover { color: var(--m-accent); }
   #discog_table { border-bottom: 0; }
 
+  /* Fallback for series banners on torrents.php views the browse-specific rule
+     below doesn't reach (bookmarks, notifications, …), where they'd otherwise
+     render at their raw width="170" height="40" attributes. Deliberately kept
+     in normal flow — no absolute positioning, since those layouts reserve no
+     space for it. The browse rule outranks this wherever it applies. */
+  td.center > a[href*="series.php"] > img {
+    width: 380px;
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--m-radius-sm);
+  }
+
   /* torrents.php browse — reserve the column for the absolutely-positioned
      cover banner, and anchor ANY image in the cell (not the fragile
      img[width="170"] selector the source used, which drops on load flicker). */
