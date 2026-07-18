@@ -498,44 +498,45 @@
   .episode:hover, .torrent_table .discog .episode a:hover { color: var(--m-accent); }
   #discog_table { border-bottom: 0; }
 
-  /* Fallback for series banners on torrents.php views the browse-specific rule
-     below doesn't reach (bookmarks, notifications, …), where they'd otherwise
-     render at their raw width="170" height="40" attributes. Deliberately kept
-     in normal flow — no absolute positioning, since those layouts reserve no
-     space for it. The browse rule outranks this wherever it applies. */
-  td.center > a[href*="series.php"] > img {
-    width: 380px;
-    max-width: 100%;
-    height: auto;
-    border-radius: var(--m-radius-sm);
-  }
-
   /* torrents.php browse — reserve the column for the absolutely-positioned
-     cover banner, and anchor ANY image in the cell (not the fragile
-     img[width="170"] selector the source used, which drops on load flicker). */
-  body#torrents table.torrent_table tr.torrent > td:nth-child(2) {
+     cover banner. The banner cell is matched STRUCTURALLY (the cell that holds
+     a series link wrapping an image) rather than by column index or body id,
+     and the size carries !important, so no attribute flicker, DOM variation or
+     missing body id can leave the banner at its raw width="170" height="40". */
+  #torrent_table tr.torrent > td:has(> a[href*="series.php"] > img),
+  table.torrent_table tr.torrent > td:has(> a[href*="series.php"] > img) {
     position: relative;
     padding: 8px 12px 8px 231px;   /* 217 banner + 14 gap */
     height: 70px;
     vertical-align: middle;
   }
   @media (min-width: 1221px) {
-    body#torrents table.torrent_table tr.torrent > td:nth-child(2) {
+    #torrent_table tr.torrent > td:has(> a[href*="series.php"] > img),
+    table.torrent_table tr.torrent > td:has(> a[href*="series.php"] > img) {
       padding: 8px 12px 8px 506px;   /* 490 banner + 16 gap */
       height: 88px;
     }
   }
-  body#torrents table.torrent_table tr.torrent > td:nth-child(2) img {
-    position: absolute;
+  #torrent_table tr.torrent > td > a[href*="series.php"] > img,
+  table.torrent_table tr.torrent > td > a[href*="series.php"] > img {
+    position: absolute !important;
     top: 8px; left: 0;
-    width: 217px; height: 70px;
+    width: 217px !important;
+    height: 70px !important;
+    max-width: none !important;
     border-radius: var(--m-radius-sm);
   }
   @media (min-width: 1221px) {
-    body#torrents table.torrent_table tr.torrent > td:nth-child(2) img { width: 490px; height: 85px; }
+    #torrent_table tr.torrent > td > a[href*="series.php"] > img,
+    table.torrent_table tr.torrent > td > a[href*="series.php"] > img {
+      width: 490px !important;
+      height: 85px !important;
+    }
   }
-  body#torrents table.torrent_table tr.torrent > td:nth-child(2) img:hover { width: 490px; }
-  body#torrents table.torrent_table tr.torrent > td:nth-child(3) { max-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #torrent_table tr.torrent > td > a[href*="series.php"] > img:hover,
+  table.torrent_table tr.torrent > td > a[href*="series.php"] > img:hover { width: 490px !important; }
+  #torrent_table tr.torrent > td:nth-child(3),
+  table.torrent_table tr.torrent > td:nth-child(3) { max-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
   /* legible release-format blocks */
   .torrent_table blockquote, body blockquote, body pre, pre, .code {
