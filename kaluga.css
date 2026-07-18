@@ -8,11 +8,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;700&display=swap");
 
 /* =====================================================================
-     CAVIAR MODERN — a standalone modern dark theme for BroadcastTheNet.
-     Purpose-built (not layered over Gold Caviar): every rule is the final
-     value, no styles loaded only to be overridden.
-     Palette: near-black neutral surfaces, hairline borders, one refined
-     steel-blue accent + functional green/red. Type: Manrope UI + Roboto Mono data.
+     KALUGA — a modern dark theme for BroadcasTheNet.
+     Built on the bones of the legendary Gold Caviar, with gratitude.
+     Palette: near-black neutral surfaces, steel-blue accent + functional
+     green/red. Type: Manrope UI + Roboto Mono data.
      ===================================================================== */
   :root {
     --m-bg:        #0c0d10;
@@ -876,8 +875,7 @@
 
 
   /* =====================================================================
-     GAZELLE SEMANTICS — ported verbatim from the Gold Caviar base so the
-     compact theme matches the layered version: remaining image/icon
+     GAZELLE SEMANTICS — inherited from the Gold Caviar base: image/icon
      replacements, user-class colors, ratio colours, torrent status
      (snatched / seeding / freeleech...), containers, source tags, and the
      inline-style overrides ("Shame") for hardcoded element styles.
@@ -2005,8 +2003,15 @@
   td:has(a.tor_highlight_seed) { color: #52e04a; }
   td:has(a.tor_highlight_snatch) { color: #e84c4c; }
 
-  /* episode format cell stays on one line — there's room now */
-  .torrent_table tr.group_torrent td:has(a[href*="torrentid"]) { white-space: nowrap; }
+  /* episode format cell: one line, and the [DL | MG …] action block sits right
+     after the format tags instead of floating to the far edge of the wide page */
+  .torrent_table tr.group_torrent td:has(a[href*="torrentid"]) {
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .torrent_table tr.group_torrent td:has(a[href*="torrentid"]) > span:first-child { order: 2; }
 
   /* index featured posts breathe like the old theme
      (scoped via .home, not body#index — the id is unreliable; the New Series
