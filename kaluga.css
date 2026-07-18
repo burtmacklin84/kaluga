@@ -120,8 +120,8 @@
   .sidebar { float: right; width: var(--gc-sidebar); }
   #content .thin::after, .home::after { content: ""; display: table; clear: both; }
   /* home flips the columns: narrow sidebar LEFT, wide main RIGHT */
-  body#index .home .main_column, .home .main_column { float: right; }
-  body#index .home .sidebar, .home .sidebar { float: left; }
+  .home .main_column { float: right; }
+  .home .sidebar { float: left; }
 
   /* =====================================================================
      HEADER — logo, user info, donation heart
@@ -526,7 +526,7 @@
   body#torrents table.torrent_table tr.torrent > td:nth-child(3) { max-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
   /* legible release-format blocks */
-  .torrent_table blockquote, body blockquote, pre, .code {
+  .torrent_table blockquote, body blockquote, body pre, pre, .code {
     background: var(--m-surface-2);
     border: 1px solid var(--m-line);
     border-radius: var(--m-radius-sm);
@@ -636,8 +636,8 @@
   /* =====================================================================
      INDEX / HOME  (ported + modernised from the base's per-page rules)
      ===================================================================== */
-  body#index .home .box { margin-bottom: var(--m-gap); }
-  body#index .home th { text-align: left; padding: 8px 12px; color: var(--m-dim); font-weight: 600; }
+  .home .box { margin-bottom: var(--m-gap); }
+  .home th { text-align: left; padding: 8px 12px; color: var(--m-dim); font-weight: 600; }
   .home table, .home td { border: 0; }
 
   /* poll bars → gold */
@@ -652,12 +652,12 @@
   #last_uploads img.toolTip, #last_uploads img[width] { width: 100%; height: auto; max-width: none; display: block; }
   #last_uploads li + li { padding: 8px 12px 0; }
   .extrapad { padding: 6px 12px 12px; text-align: center; }
-  body#index .home #last_uploads { margin-top: 0; }
+  .home #last_uploads { margin-top: 0; }
   /* "New Series in the Past 30 Days" (.box id=107): banner-only grid — the
      name links collapse via font-size:0 and the banners fill their cells */
   #\31 07 { font-size: 0; }
   #\31 07 img { width: 100%; }
-  body#index .home .sidebar ul.nobullet li, body#index .home .sidebar ul.stats li { margin: 0; }
+  .home .sidebar ul.nobullet li, .home .sidebar ul.stats li { margin: 0; }
 
   /* Post body stat tables (markdown blocks) — real bordered, striped tables
      with gold uppercase headers instead of unstyled blobs. */
@@ -670,19 +670,21 @@
   .markdown tbody tr:last-child td { border-bottom: 0; }
   .markdown tbody tr:nth-child(even) { background: rgba(255,255,255,.03); }
 
-  /* of-the-month: poster fills the card, oversized gold rating */
-  body#index .home .of_the_month img.toolTip { width: 100%; height: auto; margin: 0; display: block; border-radius: var(--m-radius-sm); }
-  body#index .home .of_the_month .head, body#index .home .of_the_month .box { width: auto; margin-left: 0; }
-  body#index .home .of_the_month .box li { padding-bottom: 10px; }
-  body#index .home .of_the_month ul { font-size: 1.1em; }
-  body#index .home .of_the_month b { font-size: 1.2em; }
-  body#index .home .month_rating {
+  /* of-the-month: two equal cards side by side, posters fill the card,
+     text breathes, oversized accent rating */
+  .of_the_month { display: flex; gap: var(--m-gap); align-items: flex-start; }
+  .of_the_month > .box { float: none !important; flex: 1 1 0; min-width: 0; margin: 0; }
+  .of_the_month img.toolTip { width: 100%; height: auto; margin: 0; display: block; border-radius: 0; }
+  .of_the_month ul.stats { font-size: 1.1em; margin: 0; padding: 0; }
+  .of_the_month ul.stats > li { margin: 0; padding: 10px 16px 14px; }
+  .of_the_month ul.stats > li:first-child { padding: 0; }
+  .of_the_month b { font-size: 1.2em; }
+  .month_rating {
     font-family: "Manrope", sans-serif;
-    font-size: 3.4em;
+    font-size: 2.8em;
     font-weight: 300;
+    line-height: 1;
     color: var(--m-accent);
-    position: relative;
-    top: -6px;
     margin-left: 10px;
   }
 
@@ -1706,11 +1708,11 @@
     background-color: #262626;
   }
 
-  body#index #content > div.thin.home > div.main_column > div:last-child > ul {
+  #content > div.thin.home > div.main_column > div:last-child > ul {
     font-size: 0;
     padding: 14px;
   }
-  body#index #content > div.thin.home > div.main_column > div:last-child > ul div[style="float:left; width:285px;"] {
+  #content > div.thin.home > div.main_column > div:last-child > ul div[style="float:left; width:285px;"] {
     float: none !important;
     width: 50% !important;
     display: inline-block;
@@ -1718,16 +1720,16 @@
     text-align: left;
     font-size: 12px;
   }
-  body#index #content > div.thin.home > div.main_column > div:last-child > ul div[style="float:left; width:285px;"]:first-child {
+  #content > div.thin.home > div.main_column > div:last-child > ul div[style="float:left; width:285px;"]:first-child {
     text-align: right;
   }
-  body#index #content > div.thin.home > div.main_column > div:last-child > ul div[style="float:left; width:285px;"]:first-child li {
+  #content > div.thin.home > div.main_column > div:last-child > ul div[style="float:left; width:285px;"]:first-child li {
     margin: 0 2.5em 0 0;
   }
-  body#index #content > div.thin.home > div.main_column > div:last-child > ul div[style="float:left; width:285px;"]:nth-child(2) li {
+  #content > div.thin.home > div.main_column > div:last-child > ul div[style="float:left; width:285px;"]:nth-child(2) li {
     margin: 0 0 0 2.5em;
   }
-  body#index #content > div.thin.home > div.main_column > div:last-child > ul strong {
+  #content > div.thin.home > div.main_column > div:last-child > ul strong {
     font-size: 1.2em;
     text-decoration: underline;
   }
@@ -2065,4 +2067,46 @@
   #content .thin > table > tbody > tr:last-child { border-bottom: 0; }
   #content .thin > table > tbody > tr:nth-child(odd):not(.rowa):not(.rowb):not(.colhead):not(.colhead_dark):not(.forum_group_header) {
     background: rgba(255,255,255,.03);
+  }
+
+
+  /* =====================================================================
+     SITE-CSS LOAD-ORDER GUARDS — on live, the External CSS loads BEFORE
+     log.css/global.css, so ties go to the site. These out-rank them.
+     ===================================================================== */
+  /* quick-reply editor: kill the white rounded-corner frame, dark the field */
+  #content .b1h, #content .b2h, #content .b3h, #content .b4h,
+  #content .b2bh, #content .b3bh, #content .b4bh { display: none; }
+  #content .headh { background: transparent; border: 0; }
+  #content .headh h3 { margin: 0; padding: 6px 0; }
+  #content div.contenth {
+    background: var(--m-surface-2);
+    border: 0;
+    border-radius: var(--m-radius-sm);
+    overflow: hidden;
+  }
+  #content .contenth div { margin-left: 0; padding-top: 0; }
+  #content div.contenth textarea {
+    background: var(--m-surface-2);
+    border: 0;
+    color: var(--m-text);
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 120px;
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+  #content div.bbcode-btntoolbar, #content div.bbcode-smileys {
+    background: var(--m-surface-3);
+    height: auto;
+    padding: 4px 6px;
+  }
+  #content .bbcode-btnhover { background: var(--m-accent-dim); border: 0; padding: 3px; }
+
+  /* release-name rows read as file paths: mono, dim, tucked under their row */
+  .torrent_table tr.group_torrent + tr:not(.group_torrent):not(.colhead_dark) > td {
+    font-family: "Roboto Mono", monospace;
+    font-size: 11px;
+    color: var(--m-dim);
+    padding-top: 2px;
   }
