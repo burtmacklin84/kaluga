@@ -1,9 +1,0 @@
-# Whitelist mode: ignore EVERYTHING, then allow only the theme files.
-# The saved "HTML Pages" contain live session credentials (authkey /
-# torrent_pass in download links) and must never be committed.
-*
-!.gitignore
-!README.md
-!build-deploy.py
-!caviar-modern.css
-!Caviar Modern.user.css

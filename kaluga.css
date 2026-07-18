@@ -1,8 +1,10 @@
-/* Caviar Modern — a standalone dark theme for BroadcasTheNet.
-   Deploy build (plain CSS for the site's External CSS setting).
-   GENERATED from "Caviar Modern.user.css" — edit that file, then rebuild
-   with:  python3 build-deploy.py
-*/
+/* ============================================================
+   KALUGA — a modern dark theme for BroadcasTheNet.
+   Flat, card-based, steel-blue. Built on the bones of the
+   legendary Gold Caviar theme, with gratitude.
+
+   Load via Settings -> External CSS.
+   ============================================================ */
 @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;700&display=swap");
 
 /* =====================================================================
