@@ -671,6 +671,12 @@
   #\31 07 { font-size: 0; }
   #\31 07 img { width: 100%; }
   .home .sidebar ul.nobullet li, .home .sidebar ul.stats li { margin: 0; }
+  /* sidebar stat lists (blog, tvnews, site/class stats) sit as a direct child
+     of .box with no .pad wrapper, so their text was flush to the card edge.
+     Pad the list to align with the header band. The Last-5-Uploads poster
+     (ul nested in #last_uploads) and the Polls box (.pad) are untouched. */
+  .sidebar .box > ul.stats { padding: 10px 14px; }
+  .sidebar .box > ul.stats > li { padding: 2px 0; }
 
   /* Post body stat tables (markdown blocks) — real bordered, striped tables
      with gold uppercase headers instead of unstyled blobs. */
