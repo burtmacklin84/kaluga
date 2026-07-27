@@ -5,13 +5,13 @@
 
    Load via Settings -> External CSS.
    ============================================================ */
-@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap");
 
 /* =====================================================================
      KALUGA — a modern dark theme for BroadcasTheNet.
      Built on the bones of the legendary Gold Caviar, with gratitude.
      Palette: near-black neutral surfaces, steel-blue accent + functional
-     green/red. Type: Manrope UI + Roboto Mono data.
+     green/red. Type: Inter UI + IBM Plex Mono data.
      ===================================================================== */
   :root {
     --m-bg:        #0c0d10;
@@ -49,7 +49,7 @@
       radial-gradient(120% 48rem at 50% -12rem, #182231 0%, rgba(24,34,49,0) 62%),
       var(--m-bg);
     color: var(--m-text);
-    font-family: "Manrope", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    font-family: "Inter", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
     font-size: 12.5px;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
@@ -181,7 +181,7 @@
     font-size: 26px;
     font-weight: 800;
     letter-spacing: -.01em;
-    font-family: "Manrope", sans-serif;
+    font-family: "Inter", sans-serif;
     color: var(--m-strong);
   }
 
@@ -483,7 +483,7 @@
 
   /* numeric columns: mono + tabular so they scan as columns */
   .torrent_table td.nobr, td.tdright, .torrent span, .group_torrent span, .torrent_table tr.group_torrent .year {
-    font-family: "Roboto Mono", monospace;
+    font-family: "IBM Plex Mono", monospace;
     font-variant-numeric: tabular-nums;
   }
   .nobr { white-space: nowrap; }
@@ -547,7 +547,7 @@
     margin: 10px;
     padding: 12px 14px;
   }
-  pre, .code { font-family: "Roboto Mono", monospace; font-size: .92em; white-space: pre; overflow-x: auto; }
+  pre, .code { font-family: "IBM Plex Mono", monospace; font-size: .92em; white-space: pre; overflow-x: auto; }
 
   /* =====================================================================
      FORMS / INPUTS / BUTTONS
@@ -558,7 +558,7 @@
     border-radius: var(--m-radius-sm);
     color: var(--m-text);
     padding: 7px 10px;
-    font-family: "Manrope", sans-serif;
+    font-family: "Inter", sans-serif;
     outline: 0;
     transition: none;   /* instant hover — no border/bg pulse */
   }
@@ -702,7 +702,7 @@
   .of_the_month ul.stats > li:first-child { padding: 0; }
   .of_the_month b { font-size: 1.2em; }
   .month_rating {
-    font-family: "Manrope", sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 2.8em;
     font-weight: 300;
     line-height: 1;
@@ -1865,12 +1865,16 @@
 
   /* torrent titles carry the row in white at full size; the detail lines
      around them run smaller. Accent is the hover state. */
-  .torrent_table a[href*="series.php?id"], .torrent_table a[href*="torrents.php?id"] {
+  /* torrentid links are excluded: those are the season/episode FORMAT links,
+     which must stay quiet mono — only true title links go white semibold */
+  .torrent_table a[href*="series.php?id"],
+  .torrent_table a[href*="torrents.php?id"]:not([href*="torrentid"]) {
     color: var(--m-strong);
     font-weight: 600;
     font-size: 13px;
   }
-  .torrent_table a[href*="series.php?id"]:hover, .torrent_table a[href*="torrents.php?id"]:hover {
+  .torrent_table a[href*="series.php?id"]:hover,
+  .torrent_table a[href*="torrents.php?id"]:not([href*="torrentid"]):hover {
     color: var(--m-accent);
   }
 
@@ -1918,7 +1922,7 @@
   .lightbox input[type=button] { margin: 2px; }
 
   /* series summary tabs (jQuery UI) — flatten the default widget theme */
-  .ui-widget { font-family: "Manrope", sans-serif !important; }
+  .ui-widget { font-family: "Inter", sans-serif !important; }
   .ui-widget-overlay { background: #000 !important; opacity: .5 !important; }
   .ui-widget-content {
     border: 0 !important;
@@ -2058,10 +2062,10 @@
   [data-resolution="SD"] { color: #e86060; }
   /* origin — a release group shown in place of P2P/Internal keeps that color,
      since data-type stays set alongside data-custom */
-  [data-type="Scene"] { color: #e84c4c; font-weight: 700; }
-  [data-type="P2P"] { color: #ae83cc; font-weight: 700; }
-  [data-type="Internal"] { color: #6ee04a; font-weight: 700; }
-  [data-type="BHD"] { color: #3988cc; font-weight: 700; }
+  [data-type="Scene"] { color: #e84c4c; font-weight: 500; }
+  [data-type="P2P"] { color: #ae83cc; font-weight: 500; }
+  [data-type="Internal"] { color: #6ee04a; font-weight: 500; }
+  [data-type="BHD"] { color: #3988cc; font-weight: 500; }
   /* audio / misc keys */
   [data-key="5.1ch"] { color: #408dae; }
   [data-key="7.1ch"] { color: #4b78f0; }
@@ -2157,7 +2161,7 @@
 
   /* release-name rows read as file paths: mono, dim, tucked under their row */
   .torrent_table tr.group_torrent + tr:not(.group_torrent):not(.colhead_dark) > td {
-    font-family: "Roboto Mono", monospace;
+    font-family: "IBM Plex Mono", monospace;
     font-size: 11px;
     color: var(--m-dim);
     padding-top: 2px;
@@ -2171,3 +2175,12 @@
     white-space: nowrap;
     padding-right: 28px;
   }
+
+
+  /* the site wraps season/episode format links in <strong> — at small mono
+     sizes bold turns to mud, so the tag line runs at normal weight */
+  .torrent_table tr.group_torrent strong:has(> a[href*="torrentid"]) { font-weight: 400; }
+
+  /* season/episode label column: the site inlines width:22% (~315px of page) —
+     cap it and hand the space to the tags + group name */
+  .torrent_table tr.group_torrent > td.group { width: 1% !important; white-space: nowrap; }
