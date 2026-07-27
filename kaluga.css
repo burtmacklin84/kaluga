@@ -2185,4 +2185,4 @@
      cap it and hand the space to the tags + group name.
      TUNING KNOB: the width below. No white-space:nowrap here — the year is
      floated right by the site, and nowrap makes it overlap the label text. */
-  .torrent_table tr.group_torrent > td.group { width: 150px !important; }
+  .torrent_table tr.group_torrent > td.group { width: 120px !important; }
