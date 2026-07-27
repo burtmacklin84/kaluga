@@ -2168,13 +2168,16 @@
   }
 
 
-  /* unread-posts style tables (every cell wraps a p.min_padding): the first
-     column hugs its content instead of hoarding the leftover width */
+  /* unread-posts style tables (every cell wraps a p.min_padding):
+     proportional columns instead of everything leaning left.
+     Forum 15% (user-tuned) / Topic 45% (overrides the site's inline 380px) /
+     Latest Post takes the remaining ~40%. */
   #content .thin > table > tbody > tr > td:first-child:has(> p.min_padding) {
-    width: 1%;
+    width: 15%;
     white-space: nowrap;
     padding-right: 28px;
   }
+  #content .thin > table > tbody > tr.colhead > td[style*="380"] { width: 45% !important; }
 
 
   /* the site wraps season/episode format links in <strong> — at small mono
