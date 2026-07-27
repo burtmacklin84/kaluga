@@ -2172,8 +2172,14 @@
      proportional columns instead of everything leaning left.
      Forum 15% (user-tuned) / Topic 45% (overrides the site's inline 380px) /
      Latest Post takes the remaining ~40%. */
+  /* the whole unread table runs at 90% width, centered */
+  #content .thin > table:has(> tbody > tr > td:first-child > p.min_padding) {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+  }
   #content .thin > table > tbody > tr > td:first-child:has(> p.min_padding) {
-    width: 15%;
+    width: 20%;
     white-space: nowrap;
     padding-right: 28px;
   }
