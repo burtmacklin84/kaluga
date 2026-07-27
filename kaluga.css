@@ -2182,5 +2182,7 @@
   .torrent_table tr.group_torrent strong:has(> a[href*="torrentid"]) { font-weight: 400; }
 
   /* season/episode label column: the site inlines width:22% (~315px of page) —
-     cap it and hand the space to the tags + group name */
-  .torrent_table tr.group_torrent > td.group { width: 1% !important; white-space: nowrap; }
+     cap it and hand the space to the tags + group name.
+     TUNING KNOB: the width below. No white-space:nowrap here — the year is
+     floated right by the site, and nowrap makes it overlap the label text. */
+  .torrent_table tr.group_torrent > td.group { width: 150px !important; }
