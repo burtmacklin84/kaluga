@@ -243,7 +243,7 @@
      (position:sticky can't work here — #menu is trapped in the 178px #header)
      The blur creates a stacking context, so the whole menu needs lifting
      above the later #searchbars row or dropdowns paint underneath it. */
-  #menu { font-weight: 600; position: relative; z-index: 60; }
+  #menu { font-weight: 600; position: relative; z-index: 500; }
   #menu1, #menu1.potato-menu {
     display: flex;
     height: auto;
@@ -2191,3 +2191,30 @@
      TUNING KNOB: the width below. No white-space:nowrap here — the year is
      floated right by the site, and nowrap makes it overlap the label text. */
   .torrent_table tr.group_torrent > td.group { width: 120px !important; }
+
+
+  /* jQuery UI dialogs (lumen exchange…): solid dark panel — the transparent
+     .ui-widget-content rule (for the series tabs) must not strip these */
+  .ui-dialog.ui-widget-content, .ui-dialog {
+    background: var(--m-surface-2) !important;
+    border: 1px solid var(--m-line) !important;
+    border-radius: var(--m-radius) !important;
+    box-shadow: 0 24px 60px rgba(0,0,0,.6) !important;
+    padding: 10px !important;
+  }
+  .ui-dialog .ui-dialog-content { background: transparent !important; color: var(--m-text) !important; }
+  .ui-dialog .ui-dialog-titlebar {
+    background: transparent !important;
+    border: 0 !important;
+    padding: 2px !important;
+    min-height: 18px;
+  }
+  .ui-dialog .ui-dialog-titlebar-close {
+    background: var(--m-surface-3) !important;
+    border: 0 !important;
+    border-radius: 6px !important;
+    right: 2px !important;
+  }
+  .ui-dialog .ui-dialog-titlebar-close:hover { background: var(--m-accent-dim) !important; }
+  .ui-dialog table { background: transparent; }
+  .ui-dialog tr { background: transparent !important; border: 0 !important; }
