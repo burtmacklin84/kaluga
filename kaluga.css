@@ -32,12 +32,12 @@
     --m-gap:       12px;
 
     /* fluid-but-capped page width; sidebar pages get a fixed rail */
-    --gc-max-width: 1800px;
+    --gc-max-width: 1440px;
     --gc-width: min(94vw, var(--gc-max-width));
     --gc-sidebar: 290px;
     /* the main↔sidebar gap mirrors the browser-edge gutter, so the three
        gaps across the page read as one consistent rhythm */
-    --m-col-gap: calc((100vw - var(--gc-width)) / 2);
+    --m-col-gap: min(calc((100vw - var(--gc-width)) / 2), 48px);
   }
 
   /* ---------- Reset / base ---------- */
@@ -384,7 +384,7 @@
     color: var(--m-text);
     padding: 11px 14px;
     font-size: 12px;
-    text-align: left;
+    text-align: center;
     margin-bottom: var(--m-gap);
   }
   .alertbar a { color: var(--m-accent); text-decoration: none; }
@@ -2161,4 +2161,13 @@
     font-size: 11px;
     color: var(--m-dim);
     padding-top: 2px;
+  }
+
+
+  /* unread-posts style tables (every cell wraps a p.min_padding): the first
+     column hugs its content instead of hoarding the leftover width */
+  #content .thin > table > tbody > tr > td:first-child:has(> p.min_padding) {
+    width: 1%;
+    white-space: nowrap;
+    padding-right: 28px;
   }
