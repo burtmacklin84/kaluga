@@ -203,7 +203,7 @@
   #userinfo a { color: var(--m-accent); }
   /* the donation badge is absolutely placed at the far right of the header,
      so the stats row reserves a lane for it */
-  #userinfo_stats { display: inline-block; color: var(--m-dim); font-weight: 400; margin-top: 7px; padding-right: 118px; }
+  #userinfo_stats { display: inline-block; color: var(--m-dim); font-weight: 400; margin-top: 7px; padding-right: 70px; }
   #userinfo_stats a { color: var(--m-accent); }
   #userinfo_stats .stat { color: var(--m-strong); font-weight: 600; }
   #userinfo_major, #userinfo_username, #userinfo_minor, #searchbutton, .hide { display: none; }
@@ -231,7 +231,7 @@
 
   #donation {
     position: absolute;
-    top: 10px; right: 0;
+    top: 18px; right: 0;
     width: 100px; height: 30px;
     z-index: 0;
   }
@@ -888,13 +888,100 @@
   /* =====================================================================
      SHARED MISC — pagination, tags, tabs, rank, popups, bbcode
      ===================================================================== */
-  /* pagination bar (1-50 | 51-100 | …) */
-  div.linkbox { text-align: center; padding: 5px; color: var(--m-accent); }
+  /* linkbox — one element, four jobs: the action strip under a banner, the
+     Top 10 tabs, forum links, and the 1-50 | 51-100 pager. Rendered as pills.
+     font-size:0 on the container collapses the site's literal "|" separators
+     and stray <br>s to nothing; the children re-declare their own size. */
+  div.linkbox {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    padding: 0;
+    margin: 10px 0 var(--m-gap);
+    font-size: 0;
+  }
   div.linkbox:empty { display: none; }
-  div.linkbox * { font-weight: 400; }
-  div.linkbox > strong { color: var(--m-strong); }
-  div.linkbox > a { color: var(--m-accent); }
-  div.linkbox > a:hover, div.linkbox > a:focus { color: var(--m-strong); }
+  div.linkbox > a,
+  div.linkbox > strong {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 26px;
+    padding: 0 12px;
+    border: 1px solid var(--m-line);
+    border-radius: 999px;
+    background: var(--m-surface-2);
+    color: var(--m-dim);
+    font-size: 11.5px;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    text-decoration: none;
+    transition: background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  div.linkbox > a:hover,
+  div.linkbox > a:focus {
+    background: var(--m-surface-3);
+    border-color: var(--m-accent-dim);
+    color: var(--m-strong);
+  }
+  /* the current page in the pager is a bare <strong>; the current Top 10 tab is
+     a <strong> INSIDE its link. Both read as the active pill — but the pager
+     wraps every page link in <strong> too, so the tab rule stays scoped to
+     top10 or the whole pager would light up. */
+  div.linkbox > strong,
+  div.linkbox:has(> a[href*="top10.php"]) > a:has(> strong) {
+    background: var(--m-accent);
+    border-color: var(--m-accent);
+    color: #0b1520;
+  }
+  div.linkbox:has(> a[href*="top10.php"]) > a:has(> strong):hover {
+    background: var(--m-strong);
+    border-color: var(--m-strong);
+    color: #0b1520;
+  }
+  div.linkbox > a > strong { font-weight: 600; color: inherit; }
+
+  /* Gazelle bakes the [square brackets] into the link text on detail pages and
+     the Top 10 tabs. There's no selector for a character, so the pill clips
+     itself and parks a strip of its own background over each bracket — the
+     glyphs still occupy space, which simply reads as the pill's padding. */
+  :is(center + div.linkbox,
+      h2:has(a > img) + div.linkbox,
+      td > div.linkbox,
+      div.linkbox:has(> a[href*="top10.php"])) > a {
+    position: relative;
+    overflow: hidden;
+    padding: 0 7px;
+  }
+  :is(center + div.linkbox,
+      h2:has(a > img) + div.linkbox,
+      td > div.linkbox,
+      div.linkbox:has(> a[href*="top10.php"])) > a::before,
+  :is(center + div.linkbox,
+      h2:has(a > img) + div.linkbox,
+      td > div.linkbox,
+      div.linkbox:has(> a[href*="top10.php"])) > a::after {
+    content: "";
+    position: absolute;   /* offsets resolve against the padding box, so the
+                             1px border survives underneath */
+    top: 0;
+    bottom: 0;
+    width: calc(7px + .365em);   /* the padding, plus just past the bracket's
+                                    ink (.32em) but short of the next glyph's
+                                    (.41em) — em-based so it tracks font-size */
+    background: inherit;
+  }
+  :is(center + div.linkbox,
+      h2:has(a > img) + div.linkbox,
+      td > div.linkbox,
+      div.linkbox:has(> a[href*="top10.php"])) > a::before { left: 0; }
+  :is(center + div.linkbox,
+      h2:has(a > img) + div.linkbox,
+      td > div.linkbox,
+      div.linkbox:has(> a[href*="top10.php"])) > a::after { right: 0; }
 
   /* torrent tags */
   .tags { font-style: italic; padding: 0 0 0 20px; }
@@ -1296,16 +1383,7 @@
     background-image: url("https://i.imgur.com/7F1UX9v.png");
   }
 
-  body .rating,
   body .current-rating {
-    -webkit-filter: hue-rotate(61deg) saturate(28%) brightness(235%);
-    -moz-filter: hue-rotate(61deg) saturate(28%) brightness(235%);
-    -o-filter: hue-rotate(61deg) saturate(28%) brightness(235%);
-    filter: hue-rotate(61deg) saturate(28%) brightness(235%);
-  }
-  body div.star-rating a {
-    background-image: url("https://i.imgur.com/22qmpoj.png");
-    background-size: 16px 48px;
     -webkit-filter: hue-rotate(61deg) saturate(28%) brightness(235%);
     -moz-filter: hue-rotate(61deg) saturate(28%) brightness(235%);
     -o-filter: hue-rotate(61deg) saturate(28%) brightness(235%);
@@ -2028,6 +2106,10 @@
     max-width: none !important;
     height: auto !important;
     max-height: none !important;
+    width: 100%;   /* the grid item would otherwise shrink-wrap to the banner's
+                      natural 758px, and #banner's 100% would resolve against
+                      that instead of the column — the torrent page's banner
+                      sits in a full-width h2 and got the full 1000px */
   }
   #banner {
     width: min(100%, 1000px) !important;
@@ -2318,3 +2400,105 @@
   img[title=Read] {
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='26' height='26'><path d='M16.8 6.34 A8 8 0 1 1 9.2 6.34' fill='none' stroke='%2339404e' stroke-width='1.7'/><rect x='12.15' y='4.4' width='1.7' height='8' rx='.85' fill='%2339404e'/></svg>") !important;
   }
+
+
+  /* =====================================================================
+     SERIES RATING — ten pill notches, red-to-green ramp.
+     No markup change, no JS: .rating-bg and .rating are the two layers
+     already in the DOM, and each radio's class names its own value.
+     Two things fight us here, hence the !important:
+       1. the site ships hover-rating.css, which positions these layers
+          relative, sizes the track to 160px and drives the fill width with
+          its own `.rbN:checked ~ .rating { width: Npx }` rules;
+       2. our stylesheet loads BEFORE the site's, so ties go to the site.
+     .rating also precedes .rating-bg in the markup, so the fill needs a
+     z-index or the full-width track paints straight over it.
+     ===================================================================== */
+  .star-rating {
+    position: relative !important; display: inline-block;
+    width: 177px !important; height: 8px !important;
+    --v: 0%; --c: #232732;
+  }
+  .star-rating input { display: none !important; }
+
+  /* value + colour, from whichever radio is checked */
+  .star-rating:has(.rb0:checked)  { --v: 0%;   --c: #e2483f; }
+  .star-rating:has(.rb1:checked)  { --v: 10%;  --c: #e2483f; }
+  .star-rating:has(.rb2:checked)  { --v: 20%;  --c: #e45b3e; }
+  .star-rating:has(.rb3:checked)  { --v: 30%;  --c: #e76e3d; }
+  .star-rating:has(.rb4:checked)  { --v: 40%;  --c: #e3ad4b; }
+  .star-rating:has(.rb5:checked)  { --v: 50%;  --c: #e0d055; }
+  .star-rating:has(.rb6:checked)  { --v: 60%;  --c: #c0cd51; }
+  .star-rating:has(.rb7:checked)  { --v: 70%;  --c: #9fca4c; }
+  .star-rating:has(.rb8:checked)  { --v: 80%;  --c: #7dc54c; }
+  .star-rating:has(.rb9:checked)  { --v: 90%;  --c: #58bc51; }
+  .star-rating:has(.rb10:checked) { --v: 100%; --c: #34b355; }
+
+  /* the two divs already in the markup become the two layers */
+  .star-rating .rating-bg, .star-rating .rating {
+    position: absolute !important; left: 0 !important; top: 0 !important;
+    height: 8px !important;
+    background: none !important;
+    background-image: linear-gradient(90deg,
+      currentColor 0 15px, transparent 15px 18px) !important;
+    background-size: 18px 8px !important; background-repeat: repeat-x !important;
+  }
+  .star-rating .rating-bg { width: 100% !important; color: #232732; z-index: 0 !important; }
+  .star-rating .rating {
+    width: var(--v) !important; color: var(--c);
+    overflow: hidden; z-index: 1 !important;
+    transition: width .12s ease, color .12s ease;
+  }
+
+  /* one invisible hit target per notch; hover previews the score */
+  .star-rating label.star {
+    position: absolute !important; float: none !important;
+    top: -5px !important; width: 18px !important; height: 18px !important;
+    padding: 0 !important; opacity: 0; cursor: pointer; z-index: 2 !important;
+  }
+  .star-rating label.rb1l  { left: 0 !important; }
+  .star-rating label.rb2l  { left: 18px !important; }
+  .star-rating label.rb3l  { left: 36px !important; }
+  .star-rating label.rb4l  { left: 54px !important; }
+  .star-rating label.rb5l  { left: 72px !important; }
+  .star-rating label.rb6l  { left: 90px !important; }
+  .star-rating label.rb7l  { left: 108px !important; }
+  .star-rating label.rb8l  { left: 126px !important; }
+  .star-rating label.rb9l  { left: 144px !important; }
+  .star-rating label.rb10l { left: 162px !important; }
+  .star-rating label.rb0l  { left: -20px !important; width: 16px !important; }  /* the 0 vote */
+  .star-rating:has(.rb0l:hover)  { --v: 0%; }
+  .star-rating:has(.rb1l:hover)  { --v: 10%; }
+  .star-rating:has(.rb2l:hover)  { --v: 20%; }
+  .star-rating:has(.rb3l:hover)  { --v: 30%; }
+  .star-rating:has(.rb4l:hover)  { --v: 40%; }
+  .star-rating:has(.rb5l:hover)  { --v: 50%; }
+  .star-rating:has(.rb6l:hover)  { --v: 60%; }
+  .star-rating:has(.rb7l:hover)  { --v: 70%; }
+  .star-rating:has(.rb8l:hover)  { --v: 80%; }
+  .star-rating:has(.rb9l:hover)  { --v: 90%; }
+  .star-rating:has(.rb10l:hover) { --v: 100%; }
+
+  /* the checked .rb label doubles as a score readout (this is YOUR vote —
+     the series average isn't present in this markup). It spans the full 177px
+     above the bar, which overlaps the card title, and it's a <label for> — so
+     without pointer-events:none, clicking the title silently casts a vote. */
+  .star-rating label.rb {
+    pointer-events: none;
+    display: none; position: absolute !important; left: 0 !important; top: -30px !important;
+    float: none !important;
+    width: 177px !important; height: auto !important; text-align: center;
+    font-family: "Inter", sans-serif;
+    font-size: 20px; font-weight: 800; letter-spacing: -.02em; color: var(--c);
+  }
+  .rb0:checked  ~ label.rb:nth-last-of-type(11) { display: block; }
+  .rb1:checked  ~ label.rb:nth-last-of-type(10) { display: block; }
+  .rb2:checked  ~ label.rb:nth-last-of-type(9)  { display: block; }
+  .rb3:checked  ~ label.rb:nth-last-of-type(8)  { display: block; }
+  .rb4:checked  ~ label.rb:nth-last-of-type(7)  { display: block; }
+  .rb5:checked  ~ label.rb:nth-last-of-type(6)  { display: block; }
+  .rb6:checked  ~ label.rb:nth-last-of-type(5)  { display: block; }
+  .rb7:checked  ~ label.rb:nth-last-of-type(4)  { display: block; }
+  .rb8:checked  ~ label.rb:nth-last-of-type(3)  { display: block; }
+  .rb9:checked  ~ label.rb:nth-last-of-type(2)  { display: block; }
+  .rb10:checked ~ label.rb:nth-last-of-type(1)  { display: block; }
