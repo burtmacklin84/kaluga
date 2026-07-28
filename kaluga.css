@@ -201,44 +201,69 @@
   }
   #userinfo ul li { display: inline-block; line-height: 1.4em; vertical-align: middle; margin: 0 .1em; padding: 2px; }
   #userinfo a { color: var(--m-accent); }
-  #userinfo_stats { display: inline-block; color: var(--m-dim); font-weight: 400; margin-top: 7px; }
+  /* the donation badge is absolutely placed at the far right of the header,
+     so the stats row reserves a lane for it */
+  #userinfo_stats { display: inline-block; color: var(--m-dim); font-weight: 400; margin-top: 7px; padding-right: 118px; }
   #userinfo_stats a { color: var(--m-accent); }
   #userinfo_stats .stat { color: var(--m-strong); font-weight: 600; }
-  #userinfo_major, #userinfo_username, #userinfo_minor, #searchbutton, .hide, #DonBk, #DonBr { display: none; }
+  #userinfo_major, #userinfo_username, #userinfo_minor, #searchbutton, .hide { display: none; }
 
-  /* donation heart (kept red) */
+  /* ---- donation badge: progress bar that ramps with completion ----------
+     The site renders the meter as two stacked images: #DonBk (100px track)
+     and #DonBr, whose width attribute IS the percentage. We keep both boxes
+     for their geometry, hide the bitmap art inside them, and paint the track
+     and fill ourselves. Ten colour bands are selected from the first digit of
+     that width, interpolated #e2483f -> #e8783c -> #e0d055 -> #8fc94a -> #34b355. */
+  #donation { --don: #e2be50; }
+  #donation:has(#DonBr img:is([width="0"], [width="1"], [width="2"],
+    [width="3"], [width="4"], [width="5"], [width="6"], [width="7"],
+    [width="8"], [width="9"]))                                          { --don: #e3523e; }  /* 0-9   */
+  #donation:has(#DonBr img[width^="1"]:not([width="1"]):not([width="100"])) { --don: #e6653d; }  /* 10-19 */
+  #donation:has(#DonBr img[width^="2"]:not([width="2"]))                { --don: #e8783c; }  /* 20-29 */
+  #donation:has(#DonBr img[width^="3"]:not([width="3"]))                { --don: #e59b46; }  /* 30-39 */
+  #donation:has(#DonBr img[width^="4"]:not([width="4"]))                { --don: #e2be50; }  /* 40-49 */
+  #donation:has(#DonBr img[width^="5"]:not([width="5"]))                { --don: #d0cf53; }  /* 50-59 */
+  #donation:has(#DonBr img[width^="6"]:not([width="6"]))                { --don: #afcc4e; }  /* 60-69 */
+  #donation:has(#DonBr img[width^="7"]:not([width="7"]))                { --don: #8fc94a; }  /* 70-79 */
+  #donation:has(#DonBr img[width^="8"]:not([width="8"]))                { --don: #6bc04e; }  /* 80-89 */
+  #donation:has(#DonBr img[width^="9"]:not([width="9"]))                { --don: #46b753; }  /* 90-99 */
+  #donation:has(#DonBr img[width="100"])                                { --don: #34b355; }  /* 100   */
+
   #donation {
     position: absolute;
-    display: inline;
-    top: 12px; right: 0;
-    text-align: center;
-    color: var(--m-strong);
+    top: 10px; right: 0;
+    width: 100px; height: 30px;
     z-index: 0;
-    width: 42px; height: 37.8px;
   }
-  #donation::before, #donation::after {
+  /* the inner wrapper becomes the positioning context for track + fill */
+  #donation > div { position: relative; width: 100px; height: 7px; }
+  #DonBk, #DonBr {
+    top: 0; left: 0;
+    height: 7px;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  #DonBk { background: var(--m-surface-3); }
+  #DonBr { background: var(--don); transition: background .25s ease; }
+  /* keep the images for their width (= the percentage) but hide the old art */
+  #DonBk img, #DonBr img { display: block; height: 7px; opacity: 0; }
+
+  #DonInfo {
     position: absolute;
-    content: "";
-    left: 11px; top: 4px;
-    width: 21px; height: 34.44px;
-    background: #c1151b;
-    border-radius: 21px 21px 0 0;
-    transform: rotate(-45deg);
-    transform-origin: 0 100%;
+    top: 11px; left: 0;
+    width: 100px; height: auto;
+    text-indent: 0 !important;
+    text-align: right;
   }
-  #donation::after {
-    left: -10px;
-    transform: rotate(45deg);
-    transform-origin: 100% 100%;
+  #DonInfo a {
+    display: block;
+    position: static;
+    width: auto; margin: 0; padding: 0;
+    font-size: 10px; font-weight: 600; line-height: 1.3;
+    letter-spacing: .02em;
+    color: var(--don) !important;
   }
-  body div#DonInfo { position: relative; width: 50px; height: 45px; font-size: .75em; font-weight: 400; z-index: 1; }
-  body div#DonInfo a {
-    display: block; position: absolute;
-    top: -1px; left: -10px; right: 0; bottom: 0;
-    width: 40px; line-height: 96px;
-    margin-top: -125px; padding-left: 2px;
-    color: #fff !important;
-  }
+  #DonInfo a:hover { color: var(--m-strong) !important; }
 
   /* =====================================================================
      MAIN NAV — flat card, tabs stretch full width, gold underline active
@@ -513,21 +538,21 @@
   #torrent_table tr.torrent > td:has(> a[href*="series.php"] > img),
   table.torrent_table tr.torrent > td:has(> a[href*="series.php"] > img) {
     position: relative;
-    padding: 8px 12px 8px 231px;   /* 217 banner + 14 gap */
+    padding: 3px 6px 3px 224px;   /* 217 banner + 7; +6 cell pad = 13 to the text */
     height: 70px;
     vertical-align: middle;
   }
   @media (min-width: 1221px) {
     #torrent_table tr.torrent > td:has(> a[href*="series.php"] > img),
     table.torrent_table tr.torrent > td:has(> a[href*="series.php"] > img) {
-      padding: 8px 12px 8px 506px;   /* 490 banner + 16 gap */
-      height: 88px;
+      padding: 3px 6px 3px 498px;   /* 490 banner + 8; +6 cell pad = 14 to the text */
+      height: 85px;
     }
   }
   #torrent_table tr.torrent > td > a[href*="series.php"] > img,
   table.torrent_table tr.torrent > td > a[href*="series.php"] > img {
     position: absolute !important;
-    top: 8px; left: 0;
+    top: 3px; left: 0;
     width: 217px !important;
     height: 70px !important;
     max-width: none !important;
