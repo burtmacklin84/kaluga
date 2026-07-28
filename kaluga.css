@@ -27,6 +27,10 @@
     --m-accent-dim:  #5a86ad;
     --m-good:      #6fce8f;
     --m-bad:       #e0736e;
+    /* category badge palette (see CATEGORY BADGES section) */
+    --cat-hd:  #7ab0e0;   /* steel blue — theme accent */
+    --cat-sd:  #e0736e;   /* coral — complementary tier */
+    --cat-ink: #0c0d10;
     --m-radius:    12px;
     --m-radius-sm: 8px;
     --m-gap:       12px;
@@ -608,6 +612,19 @@
   .filter_torrents .cat_list:not(#taglist) { margin: 6px auto; position: static; left: auto; }
   .filter_torrents .cat_list:not(#taglist) td { text-align: left; padding: 4px 18px; }
   .filter_torrents .cat_list a { color: var(--m-accent); }
+  /* browse filter: the fields used to hug the far left of a 1440px box. Narrow
+     the whole filter table and centre it as a group, so labels + fields sit in
+     the middle while the expandable tag grid stays compact (a 50% label column
+     centres the fields too, but strands the tag grid in the right half).
+     TUNING KNOB: the max width below. */
+  .filter_torrents > .box > form > table,
+  .filter_torrents > .box > table { width: min(100%, 900px); margin-left: auto; margin-right: auto; }
+  .filter_torrents > .box > form > table > tbody > tr > td.label,
+  .filter_torrents > .box > table > tbody > tr > td.label {
+    text-align: right;
+    white-space: nowrap;
+    padding-right: 14px;
+  }
   /* expandable tag / country grids keep a subtle tinted panel */
   .filter_torrents .cat_list#taglist td, .filter_torrents .country_list, .filter_torrents .country_list td {
     background: var(--m-surface-2); border-color: var(--m-line-soft);
@@ -917,17 +934,70 @@
      CATEGORY + BROWSE-TAG ICONS  (glyph swaps — the gold HD/SD marks and the
      DL / report / NEW / 20x / FAST badges on browse rows)
      ===================================================================== */
-  img[src$="/common/caticons/episode-hd.png"], img[src$="/common/caticons/series-hd.png"] { filter: hue-rotate(61deg) saturate(28%) brightness(235%); }
-  img[src$="/common/caticons/episode-sd.png"], img[src$="/common/caticons/series-sd.png"] { filter: saturate(0%) brightness(350%); }
-  img[src$="/common/caticons/episode-hd.png"] { background: url("https://i.imgur.com/oHbdJI8.png") no-repeat; background-size: 50px 50px; height: 50px; padding-left: 50px; width: 0; }
-  img[src$="/common/caticons/series-hd.png"] { background: url("https://i.imgur.com/DD361hP.png") no-repeat; background-size: 50px 50px; height: 50px; padding-left: 50px; width: 0; }
-  img[src$="/common/caticons/episode-sd.png"] { background: url("https://i.imgur.com/4G0Rjzv.png") no-repeat; background-size: 50px 50px; height: 50px; padding-left: 50px; width: 0; }
-  img[src$="/common/caticons/series-sd.png"] { background: url("https://i.imgur.com/amsOtf6.png") no-repeat; background-size: 50px 50px; height: 50px; padding-left: 50px; width: 0; }
-  img[src$="/common/browsetags/download.png"] { background: var(--m-accent) url("https://i.imgur.com/dTR6NW1.png") no-repeat; background-size: 15px 15px; height: 15px; padding-left: 15px; width: 0; }
-  img[src$="/common/browsetags/report.png"] { background: #8d6e82 url("https://i.imgur.com/ZVRnzkf.png") no-repeat; background-size: 15px 15px; height: 15px; padding-left: 15px; width: 0; }
-  img[src$="/common/browsetags/new.png"] { background: #8d6e82 url("https://i.imgur.com/Fs2TMlP.png") no-repeat; background-size: 45px 15px; height: 15px; padding-left: 45px; width: 0; }
-  img[src$="/common/browsetags/20x.png"] { background: #7f8fb0 url("https://i.imgur.com/zI755Vg.png") no-repeat; background-size: 45px 15px; height: 15px; padding-left: 45px; width: 0; }
-  img[src$="/common/browsetags/fast.png"] { background: #5f9e94 url("https://i.imgur.com/bsVe85u.png") no-repeat; background-size: 45px 15px; height: 15px; padding-left: 45px; width: 0; }
+  /* ---- category badges: outline = episode, filled plate = season --------
+     Selectors match on filename only (not the /common/caticons/ path) so they
+     apply both live and in the local harness, whose saved pages rewrite srcs. */
+  img:is([src$="episode-hd.png"], [src$="episode-sd.png"], [src$="series-hd.png"], [src$="series-sd.png"]) {
+    width: 0 !important; height: 0 !important; padding: 0 !important;
+    background: none !important; filter: none !important;
+  }
+  :is(td, a, span, div):has(> img[src$="episode-hd.png"]) { --c: var(--cat-hd); --q: "HD"; --l: "EPISODE"; }
+  :is(td, a, span, div):has(> img[src$="episode-sd.png"]) { --c: var(--cat-sd); --q: "SD"; --l: "EPISODE"; }
+  :is(td, a, span, div):has(> img[src$="series-hd.png"])  { --c: var(--cat-hd); --q: "HD"; --l: "SEASON"; }
+  :is(td, a, span, div):has(> img[src$="series-sd.png"])  { --c: var(--cat-sd); --q: "SD"; --l: "SEASON"; }
+
+  :is(td, a, span, div):has(> img:is([src$="episode-hd.png"], [src$="episode-sd.png"], [src$="series-hd.png"], [src$="series-sd.png"])) {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    box-sizing: border-box; width: 58px; height: 44px; gap: 2px;
+    border: 1.5px solid var(--c); border-radius: 8px;
+    color: var(--c); background: transparent;
+    font-family: "Inter", sans-serif; line-height: 1; text-decoration: none;
+  }
+  :is(td, a, span, div):has(> img:is([src$="episode-hd.png"], [src$="episode-sd.png"], [src$="series-hd.png"], [src$="series-sd.png"]))::before {
+    content: var(--q); font-size: 19px; font-weight: 800; letter-spacing: -.02em;
+  }
+  :is(td, a, span, div):has(> img:is([src$="episode-hd.png"], [src$="episode-sd.png"], [src$="series-hd.png"], [src$="series-sd.png"]))::after {
+    content: var(--l); font-size: 7.5px; font-weight: 600; letter-spacing: .13em;
+  }
+  /* season = solid plate, episode = outline */
+  :is(td, a, span, div):has(> img[src$="series-hd.png"]),
+  :is(td, a, span, div):has(> img[src$="series-sd.png"]) {
+    background: var(--c); color: var(--cat-ink);
+  }
+
+  /* ---- row actions: download + report ---- */
+  img[src$="download.png"] {
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18'><rect width='18' height='18' rx='4' fill='%233f9ae8'/><path d='M8.1 4 h1.8 v5.2 h2.5 L9 13.4 L5.6 9.2 h2.5 z' fill='%2308111c'/></svg>") no-repeat;
+    background-size: 18px 18px; height: 18px; padding-left: 18px; width: 0;
+    border-radius: 0; filter: none;
+  }
+  img[src$="report.png"] {
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18'><rect width='18' height='18' rx='4' fill='%23e2483f'/><path d='M8.15 4 h1.7 l-.3 6 h-1.1 z' fill='%23170707'/><circle cx='9' cy='13' r='1.15' fill='%23170707'/></svg>") no-repeat;
+    background-size: 18px 18px; height: 18px; padding-left: 18px; width: 0;
+    border-radius: 0; filter: none;
+  }
+
+  /* ---- torrent flags: hairline outlines, one hue each ---- */
+  img[src$="20x.png"] {
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='46' height='16'><rect x='.5' y='.5' width='45' height='15' rx='3' fill='none' stroke='%23e0d055'/><text x='23' y='11.5' text-anchor='middle' font-family='Inter,Helvetica,Arial,sans-serif' font-size='9' font-weight='700' letter-spacing='.6' fill='%23e0d055'>2.0x</text></svg>") no-repeat;
+    background-size: 46px 16px; height: 16px; padding-left: 46px; width: 0; border-radius: 0;
+  }
+  img[src$="fast.png"] {
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='46' height='16'><rect x='.5' y='.5' width='45' height='15' rx='3' fill='none' stroke='%236fce8f'/><text x='23' y='11.5' text-anchor='middle' font-family='Inter,Helvetica,Arial,sans-serif' font-size='9' font-weight='700' letter-spacing='.6' fill='%236fce8f'>FAST</text></svg>") no-repeat;
+    background-size: 46px 16px; height: 16px; padding-left: 46px; width: 0; border-radius: 0;
+  }
+  img[src$="new.png"] {
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='46' height='16'><rect x='.5' y='.5' width='45' height='15' rx='3' fill='none' stroke='%237ab0e0'/><text x='23' y='11.5' text-anchor='middle' font-family='Inter,Helvetica,Arial,sans-serif' font-size='9' font-weight='700' letter-spacing='.6' fill='%237ab0e0'>NEW</text></svg>") no-repeat;
+    background-size: 46px 16px; height: 16px; padding-left: 46px; width: 0; border-radius: 0;
+  }
+  img[src$="auto.png"] {
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='46' height='16'><rect x='.5' y='.5' width='45' height='15' rx='3' fill='none' stroke='%23b385f5'/><text x='23' y='11.5' text-anchor='middle' font-family='Inter,Helvetica,Arial,sans-serif' font-size='9' font-weight='700' letter-spacing='.6' fill='%23b385f5'>AUTO</text></svg>") no-repeat;
+    background-size: 46px 16px; height: 16px; padding-left: 46px; width: 0; border-radius: 0;
+  }
+  img[src$="foreign.png"] {
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='56' height='16'><rect x='.5' y='.5' width='55' height='15' rx='3' fill='none' stroke='%2358d6e0'/><text x='28' y='11.5' text-anchor='middle' font-family='Inter,Helvetica,Arial,sans-serif' font-size='9' font-weight='700' letter-spacing='.6' fill='%2358d6e0'>FOREIGN</text></svg>") no-repeat;
+    background-size: 56px 16px; height: 16px; padding-left: 56px; width: 0; border-radius: 0;
+  }
 
 
   /* =====================================================================
@@ -937,26 +1007,6 @@
      inline-style overrides ("Shame") for hardcoded element styles.
      ===================================================================== */
   /* Image replacements */
-
-  img[src$="/common/browsetags/auto.png"] {
-    background-image: url("https://i.imgur.com/X3VCbuf.png");
-    background-repeat: no-repeat;
-    background-size: 45px 15px;
-    height: 15px;
-    padding-left: 45px;
-    width: 0;
-    background-color: #66788f;
-  }
-
-  img[src$="/common/browsetags/foreign.png"] {
-    background-image: url("https://i.imgur.com/3yXoPOC.png");
-    background-repeat: no-repeat;
-    background-size: 45px 15px;
-    height: 15px;
-    padding-left: 45px;
-    width: 0;
-    background-color: #7d94a8;
-  }
 
   img[src$="/common/icons/UpVote.png"] {
     background-image: url("https://i.imgur.com/I37JsF9.png");
@@ -1013,35 +1063,8 @@
     filter: none;
   }
 
-  img[title=Snatches] {
-    background-image: url("https://i.imgur.com/F6Wn37P.png");
-    background-repeat: no-repeat;
-    background-size: 15px 15px;
-    height: 15px;
-    padding-left: 15px;
-    width: 0;
-    content: url("https://i.imgur.com/F6Wn37P.png");
-  }
 
-  img[title=Seeders] {
-    background-image: url("https://i.imgur.com/ldPfE7x.png");
-    background-repeat: no-repeat;
-    background-size: 11px 15px;
-    height: 15px;
-    padding-left: 11px;
-    width: 0;
-    content: url("https://i.imgur.com/ldPfE7x.png");
-  }
 
-  img[title=Leechers] {
-    background-image: url("https://i.imgur.com/cA3DKwn.png");
-    background-repeat: no-repeat;
-    background-size: 11px 15px;
-    height: 15px;
-    padding-left: 11px;
-    width: 0;
-    content: url("https://i.imgur.com/cA3DKwn.png");
-  }
 
   img[src$="/common/icons/on.png"] {
     background-image: url("https://i.imgur.com/llDH42E.png");
@@ -1088,31 +1111,7 @@
     width: 0;
   }
 
-  img[title=Unread] {
-    background-image: url("https://i.imgur.com/XDOrCea.png");
-    background-repeat: no-repeat;
-    background-size: 47px 35px;
-    height: 35px;
-    padding-left: 47px;
-    width: 0;
-    -webkit-filter: hue-rotate(61deg) saturate(28%) brightness(235%);
-    -moz-filter: hue-rotate(61deg) saturate(28%) brightness(235%);
-    -o-filter: hue-rotate(61deg) saturate(28%) brightness(235%);
-    filter: hue-rotate(61deg) saturate(28%) brightness(235%);
-  }
 
-  img[title=Read] {
-    background-image: url("https://i.imgur.com/XDOrCea.png");
-    background-repeat: no-repeat;
-    background-size: 47px 35px;
-    height: 35px;
-    padding-left: 47px;
-    width: 0;
-    -webkit-filter: saturate(0%) brightness(200%) opacity(0.5);
-    -moz-filter: saturate(0%) brightness(200%) opacity(0.5);
-    -o-filter: saturate(0%) brightness(200%) opacity(0.5);
-    filter: saturate(0%) brightness(200%) opacity(0.5);
-  }
 
   img[src$="/common/icons/page_copy.png"] {
     background-image: url("https://i.imgur.com/dZUKxXz.png");
@@ -1219,56 +1218,8 @@
     width: 0;
   }
 
-  #torrents img[title=Snatches] {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    -webkit-filter: brightness(55%);
-    -moz-filter: brightness(55%);
-    -o-filter: brightness(55%);
-    filter: brightness(55%);
-    display: block;
-    background: url("https://i.imgur.com/F6Wn37P.png") no-repeat;
-    height: 15px;
-    padding-right: 15px;
-    width: 15px;
-    font-size: 0;
-    content: url("https://i.imgur.com/F6Wn37P.png");
-  }
 
-  #torrents img[title=Seeders] {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    -webkit-filter: brightness(55%);
-    -moz-filter: brightness(55%);
-    -o-filter: brightness(55%);
-    filter: brightness(55%);
-    display: block;
-    background: url("https://i.imgur.com/ldPfE7x.png") no-repeat;
-    height: 15px;
-    padding-right: 15px;
-    width: 15px;
-    font-size: 0;
-    content: url("https://i.imgur.com/ldPfE7x.png");
-  }
 
-  #torrents img[title=Leechers] {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    -webkit-filter: brightness(55%);
-    -moz-filter: brightness(55%);
-    -o-filter: brightness(55%);
-    filter: brightness(55%);
-    display: block;
-    background: url("https://i.imgur.com/cA3DKwn.png") no-repeat;
-    height: 15px;
-    padding-right: 15px;
-    width: 15px;
-    font-size: 0;
-    content: url("https://i.imgur.com/cA3DKwn.png");
-  }
 
   img[alt="Default avatar"] {
     background-image: url("https://i.imgur.com/mvTjM9K.png");
@@ -1906,10 +1857,6 @@
   input:focus, textarea:focus, select:focus { box-shadow: 0 0 0 3px rgba(122,176,224,.15); }
 
   /* browse badges sit as rounded chips */
-  img[src$="/common/browsetags/download.png"], img[src$="/common/browsetags/report.png"],
-  img[src$="/common/browsetags/new.png"], img[src$="/common/browsetags/20x.png"],
-  img[src$="/common/browsetags/fast.png"], img[src$="/common/browsetags/auto.png"],
-  img[src$="/common/browsetags/foreign.png"] { border-radius: 3px; }
 
   /* thin modern scrollbar */
   ::-webkit-scrollbar { width: 10px; height: 10px; }
@@ -2277,3 +2224,40 @@
   #addtrailer > ul.nobullet { padding: 12px 16px 14px; }
   #addtrailer > ul.nobullet > li { padding: 3px 0; }
   #addtrailer > ul.nobullet > li input[type=text] { margin-right: 6px; }
+
+
+  /* ---- snatched / seeders / leechers: stemmed arrows ---- */
+  img[title=Snatches], #torrents img[title=Snatches],
+  img[title=Seeders],  #torrents img[title=Seeders],
+  img[title=Leechers], #torrents img[title=Leechers] {
+    content: normal !important; display: inline-block !important;
+    width: 0 !important; height: 14px !important; padding: 0 0 0 14px !important;
+    background-repeat: no-repeat !important; background-position: center !important;
+    background-size: 14px 14px !important; filter: none !important; vertical-align: middle;
+  }
+  img[title=Snatches], #torrents img[title=Snatches] {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14'><path d='M6.1 1.6 V6 H3.4 L7 10 L10.6 6 H7.9 V1.6 z' fill='%23858b9b'/><path d='M2.6 11 H11.4 V12.6 H2.6 z' fill='%23858b9b'/></svg>") !important;
+  }
+  img[title=Seeders], #torrents img[title=Seeders] {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14'><path d='M6.1 12.4 V6.4 H3 L7 1.8 L11 6.4 H7.9 V12.4 z' fill='%236fce8f'/></svg>") !important;
+  }
+  img[title=Leechers], #torrents img[title=Leechers] {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14'><path d='M6.1 1.6 V7.6 H3 L7 12.2 L11 7.6 H7.9 V1.6 z' fill='%23d9a138'/></svg>") !important;
+  }
+
+  /* ---- forum read / unread: 26px power mark ----
+     Unread = heritage gold disc (a deliberate nod to Gold Caviar); read = a
+     quiet outline mark. TUNING KNOB: the disc fill below — %237ab0e0 swaps it
+     to the steel-blue accent. */
+  img[title=Unread], img[title=Read] {
+    content: normal !important;
+    width: 0 !important; height: 26px !important; padding: 0 0 0 26px !important;
+    background-repeat: no-repeat !important; background-position: center !important;
+    background-size: 26px 26px !important; filter: none !important; vertical-align: middle;
+  }
+  img[title=Unread] {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='26' height='26'><circle cx='13' cy='13' r='12' fill='%23e0d055'/><path d='M16.8 6.34 A8 8 0 1 1 9.2 6.34' fill='none' stroke='%23141200' stroke-width='2.2'/><rect x='12.1' y='4.4' width='1.8' height='8' rx='.9' fill='%23141200'/></svg>") !important;
+  }
+  img[title=Read] {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='26' height='26'><path d='M16.8 6.34 A8 8 0 1 1 9.2 6.34' fill='none' stroke='%2339404e' stroke-width='1.7'/><rect x='12.15' y='4.4' width='1.7' height='8' rx='.85' fill='%2339404e'/></svg>") !important;
+  }
