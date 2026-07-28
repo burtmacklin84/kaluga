@@ -42,6 +42,9 @@
     /* the main↔sidebar gap mirrors the browser-edge gutter, so the three
        gaps across the page read as one consistent rhythm */
     --m-col-gap: min(calc((100vw - var(--gc-width)) / 2), 48px);
+    /* upload.php's single centred column — the site inlines 700px on the
+       "do not upload" block, so the form below is matched to it */
+    --upload-col: 700px;
   }
 
   /* ---------- Reset / base ---------- */
@@ -937,9 +940,18 @@
      Ours loads first, so widening them needs !important. The slider's JS reads
      the panel width at DOMReady to size the rail, so it still adds up. */
   #slider, #slider .scroll { width: 100% !important; }
-  #slider .scrollContainer div.panel {
-    width: calc(var(--gc-width) - var(--gc-sidebar) - var(--m-col-gap)) !important;
+  /* A panel has to be exactly as wide as the viewport it scrolls through, or
+     the next one peeks in. Arithmetic can't supply that: the profile page puts
+     the slider in .midbar while user.php?action=edit puts it straight in
+     .thin. So the rail becomes a flex row and each panel takes a full basis of
+     it, which resolves against the viewport whatever the page. The rail's
+     width:auto must beat the inline px the slider's JS writes. */
+  #slider .scrollContainer {
+    display: flex;
+    width: auto !important;
   }
+  #slider .scrollContainer > .panel { flex: 0 0 100%; }
+  #slider .scrollContainer > :not(.panel) { flex: 0 0 auto; }
   /* the Info tab's stats are four floated 191px columns, which left a third of
      the widened panel empty — as equal tracks they fill it and still wrap */
   #section2 .statistics {
@@ -977,12 +989,14 @@
      Top 10 tabs, forum links, and the 1-50 | 51-100 pager. Rendered as pills.
      font-size:0 on the container collapses the site's literal "|" separators
      and stray <br>s to nothing; the children re-declare their own size. */
+  /* Deliberately inline flow rather than flex: some of these carry <br>s that
+     mean something (recommend.php puts [Add], the pager and its two search
+     forms on three lines), and a <br> is given zero width as a flex item, so
+     flex silently swallowed those breaks. Inline-block pills in a centred
+     block keep the markup's own line structure. */
   div.linkbox {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    gap: 6px;
+    display: block;
+    text-align: center;
     padding: 0;
     margin: 10px 0 var(--m-gap);
     font-size: 0;
@@ -993,6 +1007,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    vertical-align: middle;
+    margin: 3px;            /* the row rhythm, since there's no flex gap */
     height: 26px;
     padding: 0 12px;
     border: 1px solid var(--m-line);
@@ -1124,6 +1140,61 @@
   body#reports textarea[name=reason] { margin-top: 15px; width: 100%; box-sizing: border-box; }
 
   body#upload #torrent_table tr:nth-child(n+3) { background: var(--m-surface-2); }
+
+  /* ---- upload.php ----
+     Two bare blocks with no .box between them, so both are matched
+     structurally. (The page's body id is "series", so it can't be scoped that
+     way — another reason not to trust the ids.) */
+  /* "Do not upload" is a plain div sitting straight on the page background */
+  #content > div:has(> #dnu_header) {
+    width: var(--upload-col) !important;   /* the site inlines 700px */
+    max-width: 100%;
+    margin: 0 auto var(--m-gap);
+    background: var(--m-surface);
+    border-radius: var(--m-radius);
+    overflow: hidden;
+  }
+  #dnu_header {
+    margin: 0;
+    padding: 11px 16px;
+    background: var(--m-surface-2);
+    border-bottom: 1px solid var(--m-line);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    text-align: left;
+  }
+  #content > div:has(> #dnu_header) > p { margin: 0; padding: 12px 16px; color: var(--m-dim); }
+  #content > div:has(> #dnu_header) table { width: 100%; }
+  #content > div:has(> #dnu_header) td { padding: 7px 16px; }
+  #content > div:has(> #dnu_header) tr:not(.colhead) { border-top: 1px solid var(--m-line-soft); }
+
+  /* the autofill tables are width="100%" and each sizes its own label column,
+     so the stack fanned out across the page and stepped in and out as more of
+     them appeared. One shared column, centred on the block above. */
+  /* the id alone loses to the generic `#content .thin > form table` margin
+     rule above, which would pin these back to the left edge */
+  #content .thin > form#upload_table > table {
+    width: var(--upload-col);
+    max-width: 100%;
+    margin: 0 auto var(--m-gap);
+    /* auto layout treats a cell width as a hint and each table still drifted
+       (195px vs 228px); fixed layout makes the label column exact */
+    table-layout: fixed;
+  }
+  /* wide enough for the longest label, "Submit Autofill:" */
+  #upload_table > table td.label { width: 200px; }
+  /* the two intro lines are h2s, centred by the site while every other cell in
+     the stack is left-aligned */
+  #upload_table h2 {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--m-dim);
+    text-align: left;
+    margin: 2px 0;
+  }
+  #upload_table input[type=text] { max-width: 100%; box-sizing: border-box; }
   body#rules td, body#irc td { padding: .5em 1em; }
   body#kb .main_column .box .pad { font-size: 13px; padding: 14px; }
 
