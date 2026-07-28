@@ -992,6 +992,13 @@
        td > div.linkbox                           peer/file list strip
        div.linkbox:has(> a[href*="top10.php"])    Top 10 tabs */
 
+  /* The series strip's [Add to Favorites] still goes through the site's dead
+     TvRage lookup — broken for over a decade, so the button is hidden rather
+     than left to fail. (The favourites page's own add form posts a hidden
+     field, not this URL, so it is unaffected.) Delete this rule if BTN ever
+     fixes tvfavs.php?action=addshow. */
+  div.linkbox > a[href*="tvfavs.php?action=addshow"] { display: none !important; }  /* the pill scope's display outranks this otherwise */
+
   /* ---- base: plain centred text (pager, forum links, recommend, requests) */
   div.linkbox {
     display: block;
