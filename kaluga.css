@@ -707,10 +707,12 @@
   /* =====================================================================
      SERIES PAGE
      ===================================================================== */
-  /* NOTE: series.php emitted body id="torrents" up to Gazelle 1.70.36 and
-     emits body id="series" from 1.70.38 — which is exactly why the rules in
-     this section are scoped structurally: they survived the change untouched.
-     Anything that genuinely needs the page id has to accept both. */
+  /* NOTE: series.php is not consistent about its body id — captures show both
+     id="torrents" and id="series", server-rendered either way (nothing on the
+     page assigns it). The cause is unestablished; the two known captures also
+     differ in season count, so it may be a page variant rather than a change
+     over time. Hence: scope structurally, and let anything that genuinely
+     needs the page id accept both. */
   /* fan-art card: the backdrop fills the card, flush to its edges */
   .box.center > .body:has(> img[onload^="Scale"]) { padding: 0; }
   .box.center > .body > img[onload^="Scale"] { margin: 0; }
