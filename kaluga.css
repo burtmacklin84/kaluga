@@ -619,9 +619,37 @@
   .filter_torrents { width: var(--gc-width); }
   .filter_torrents > .box.pad.center { margin-top: 2px; margin-bottom: 10px; }
   .filter_tickets .submit, .filter_torrents .submit { text-align: right; padding-top: 5px; }
-  /* "Clear new torrents" bar keeps a visible shaded fill */
-  .box.pad.center:has(> a[href*="clearnew"]), .box.pad.center:has(> form[action*="clearnew"]) {
+  /* "Clear new torrents" ships as a full-page-width shaded bar wrapping a
+     single link. The box becomes a plain centring wrapper and the link itself
+     becomes the button, matching the linkbox pills. */
+  .box.pad.center:has(> form[action*="clearnew"]) { background: var(--m-surface-2); }
+  .box.pad.center:has(> a[href*="clearnew"]) {
+    background: none;
+    padding: 0;
+    margin-bottom: var(--m-gap);
+    text-align: center;
+  }
+  .box.pad.center > a[href*="clearnew"] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 28px;
+    padding: 0 16px;
+    border: 1px solid var(--m-line);
+    border-radius: 999px;
     background: var(--m-surface-2);
+    color: var(--m-text);
+    font-size: 11.5px;
+    font-weight: 600;
+    line-height: 1;
+    text-decoration: none;
+    transition: background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .box.pad.center > a[href*="clearnew"]:hover,
+  .box.pad.center > a[href*="clearnew"]:focus {
+    background: var(--m-surface-3);
+    border-color: var(--m-accent-dim);
+    color: var(--m-strong);
   }
   /* free-text fields carry size="60"; keep them contained, not full-bleed */
   .filter_torrents input[type=text], .filter_torrents input:not([type]) {
@@ -965,7 +993,7 @@
     border: 1px solid var(--m-line);
     border-radius: 999px;
     background: var(--m-surface-2);
-    color: var(--m-dim);
+    color: var(--m-text);
     font-size: 11.5px;
     font-weight: 600;
     line-height: 1;
@@ -2114,8 +2142,17 @@
     background: none !important;
     font-weight: 500;
   }
+  /* The site runs jQuery UI 1.8.16, whose menu marks the hovered row by adding
+     ui-state-hover to the child <a> — not the ui-state-focus/-active that later
+     versions use, which is all we covered, so the row never lit up. Keyboard
+     and newer-markup variants stay listed, and the plain :hover is a fallback
+     in case the widget's class ever changes again. */
+  ul.ui-autocomplete .ui-menu-item a:hover,
+  ul.ui-autocomplete .ui-menu-item a.ui-state-hover,
   ul.ui-autocomplete .ui-menu-item a.ui-state-focus,
   ul.ui-autocomplete .ui-menu-item a.ui-state-active,
+  ul.ui-autocomplete .ui-menu-item .ui-menu-item-wrapper:hover,
+  ul.ui-autocomplete .ui-menu-item .ui-menu-item-wrapper.ui-state-hover,
   ul.ui-autocomplete .ui-menu-item .ui-menu-item-wrapper.ui-state-active,
   ul.ui-autocomplete .ui-menu-item .ui-menu-item-wrapper.ui-state-focus {
     background: rgba(122,176,224,.14) !important;
