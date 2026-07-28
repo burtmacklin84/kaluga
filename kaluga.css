@@ -707,8 +707,10 @@
   /* =====================================================================
      SERIES PAGE
      ===================================================================== */
-  /* NOTE: series.php pages carry body id="torrents" (there is NO body#series
-     on the live site) — these rules are scoped structurally instead. */
+  /* NOTE: series.php emitted body id="torrents" up to Gazelle 1.70.36 and
+     emits body id="series" from 1.70.38 — which is exactly why the rules in
+     this section are scoped structurally: they survived the change untouched.
+     Anything that genuinely needs the page id has to accept both. */
   /* fan-art card: the backdrop fills the card, flush to its edges */
   .box.center > .body:has(> img[onload^="Scale"]) { padding: 0; }
   .box.center > .body > img[onload^="Scale"] { margin: 0; }
@@ -716,7 +718,7 @@
   .sidebar .box div > img[onload^="Scale"] { margin: 0; }
   .sidebar .box > div[style*="position: relative"]:has(> img[onload^="Scale"]) { padding: 0 !important; }
   .sidebar .box img[alt], .sidebar .box .pad img { border-radius: 0; }
-  body#torrents .sidebar table td { padding: 6px 14px; border: 0; }
+  :is(body#torrents, body#series) .sidebar table td { padding: 6px 14px; border: 0; }
   #playbutton { filter: drop-shadow(0 4px 12px rgba(0,0,0,.6)); }
 
   /* =====================================================================
@@ -2610,14 +2612,37 @@
      targets precede the readouts in the markup, so ~ reaches them; the show
      rule outweighs the hide rule, so the two can't deadlock. */
   .star-rating:has(label.star:hover) label.rb { display: none; }
-  .star-rating label.rb0l:hover  ~ label.rb:nth-last-of-type(11) { display: block; }
-  .star-rating label.rb1l:hover  ~ label.rb:nth-last-of-type(10) { display: block; }
-  .star-rating label.rb2l:hover  ~ label.rb:nth-last-of-type(9)  { display: block; }
-  .star-rating label.rb3l:hover  ~ label.rb:nth-last-of-type(8)  { display: block; }
-  .star-rating label.rb4l:hover  ~ label.rb:nth-last-of-type(7)  { display: block; }
-  .star-rating label.rb5l:hover  ~ label.rb:nth-last-of-type(6)  { display: block; }
-  .star-rating label.rb6l:hover  ~ label.rb:nth-last-of-type(5)  { display: block; }
-  .star-rating label.rb7l:hover  ~ label.rb:nth-last-of-type(4)  { display: block; }
-  .star-rating label.rb8l:hover  ~ label.rb:nth-last-of-type(3)  { display: block; }
-  .star-rating label.rb9l:hover  ~ label.rb:nth-last-of-type(2)  { display: block; }
-  .star-rating label.rb10l:hover ~ label.rb:nth-last-of-type(1)  { display: block; }
+  .star-rating label.rb0l:hover  ~ label.rb:nth-last-of-type(11) { display: block !important; }
+  .star-rating label.rb1l:hover  ~ label.rb:nth-last-of-type(10) { display: block !important; }
+  .star-rating label.rb2l:hover  ~ label.rb:nth-last-of-type(9)  { display: block !important; }
+  .star-rating label.rb3l:hover  ~ label.rb:nth-last-of-type(8)  { display: block !important; }
+  .star-rating label.rb4l:hover  ~ label.rb:nth-last-of-type(7)  { display: block !important; }
+  .star-rating label.rb5l:hover  ~ label.rb:nth-last-of-type(6)  { display: block !important; }
+  .star-rating label.rb6l:hover  ~ label.rb:nth-last-of-type(5)  { display: block !important; }
+  .star-rating label.rb7l:hover  ~ label.rb:nth-last-of-type(4)  { display: block !important; }
+  .star-rating label.rb8l:hover  ~ label.rb:nth-last-of-type(3)  { display: block !important; }
+  .star-rating label.rb9l:hover  ~ label.rb:nth-last-of-type(2)  { display: block !important; }
+  .star-rating label.rb10l:hover ~ label.rb:nth-last-of-type(1)  { display: block !important; }
+
+  /* ---- alongside the BTN Series Ratings userscript ----
+     It injects span.btn-rating-avg — the exact site rating — immediately
+     before the widget, and leaves the bar free to carry your own vote. Both
+     numbers want the same lane above the bar, so the span takes the headline
+     slot and the bar's readout is demoted to the hover preview: at rest you
+     read the site's figure, and while pointing at a notch you read the vote
+     you'd cast. Without the script none of this matches and the readout keeps
+     its resting job. The span is white and the preview is on the ramp, so the
+     two are never mistaken for each other. */
+  span.btn-rating-avg {
+    margin: 14px 0 0;
+    font-size: 20px;
+    font-weight: 800 !important;   /* the script sets bold inline */
+    letter-spacing: -.02em;
+    line-height: 1.1;
+    color: var(--m-strong);
+  }
+  /* 8px + the span's 22px line box puts its top at -30px: exactly where the
+     preview readout sits, so the two occupy one slot and nothing shifts */
+  span.btn-rating-avg + .star-rating { margin-top: 8px !important; }
+  span.btn-rating-avg + .star-rating label.rb { display: none !important; }
+  span.btn-rating-avg:has(+ .star-rating label.star:hover) { visibility: hidden; }
