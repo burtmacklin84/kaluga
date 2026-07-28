@@ -2565,17 +2565,21 @@
   .star-rating label.rb9l  { left: 144px !important; }
   .star-rating label.rb10l { left: 162px !important; }
   .star-rating label.rb0l  { left: -20px !important; width: 16px !important; }  /* the 0 vote */
-  .star-rating:has(.rb0l:hover)  { --v: 0%; }
-  .star-rating:has(.rb1l:hover)  { --v: 10%; }
-  .star-rating:has(.rb2l:hover)  { --v: 20%; }
-  .star-rating:has(.rb3l:hover)  { --v: 30%; }
-  .star-rating:has(.rb4l:hover)  { --v: 40%; }
-  .star-rating:has(.rb5l:hover)  { --v: 50%; }
-  .star-rating:has(.rb6l:hover)  { --v: 60%; }
-  .star-rating:has(.rb7l:hover)  { --v: 70%; }
-  .star-rating:has(.rb8l:hover)  { --v: 80%; }
-  .star-rating:has(.rb9l:hover)  { --v: 90%; }
-  .star-rating:has(.rb10l:hover) { --v: 100%; }
+  /* Hovering a notch previews that score — bar, colour and readout all follow
+     the pointer, so you see the vote before committing to it. These sit after
+     the :checked rules at equal specificity, so the preview wins while the
+     pointer is down the track and the real vote returns when it leaves. */
+  .star-rating:has(.rb0l:hover)  { --v: 0%;   --c: #e2483f; }
+  .star-rating:has(.rb1l:hover)  { --v: 10%;  --c: #e2483f; }
+  .star-rating:has(.rb2l:hover)  { --v: 20%;  --c: #e45b3e; }
+  .star-rating:has(.rb3l:hover)  { --v: 30%;  --c: #e76e3d; }
+  .star-rating:has(.rb4l:hover)  { --v: 40%;  --c: #e3ad4b; }
+  .star-rating:has(.rb5l:hover)  { --v: 50%;  --c: #e0d055; }
+  .star-rating:has(.rb6l:hover)  { --v: 60%;  --c: #c0cd51; }
+  .star-rating:has(.rb7l:hover)  { --v: 70%;  --c: #9fca4c; }
+  .star-rating:has(.rb8l:hover)  { --v: 80%;  --c: #7dc54c; }
+  .star-rating:has(.rb9l:hover)  { --v: 90%;  --c: #58bc51; }
+  .star-rating:has(.rb10l:hover) { --v: 100%; --c: #34b355; }
 
   /* the checked .rb label doubles as a score readout (this is YOUR vote —
      the series average isn't present in this markup). It spans the full 177px
@@ -2600,3 +2604,20 @@
   .rb8:checked  ~ label.rb:nth-last-of-type(3)  { display: block; }
   .rb9:checked  ~ label.rb:nth-last-of-type(2)  { display: block; }
   .rb10:checked ~ label.rb:nth-last-of-type(1)  { display: block; }
+
+  /* …and the readout follows the pointer too: while any notch is hovered the
+     checked number steps aside and the hovered one takes its place. The hit
+     targets precede the readouts in the markup, so ~ reaches them; the show
+     rule outweighs the hide rule, so the two can't deadlock. */
+  .star-rating:has(label.star:hover) label.rb { display: none; }
+  .star-rating label.rb0l:hover  ~ label.rb:nth-last-of-type(11) { display: block; }
+  .star-rating label.rb1l:hover  ~ label.rb:nth-last-of-type(10) { display: block; }
+  .star-rating label.rb2l:hover  ~ label.rb:nth-last-of-type(9)  { display: block; }
+  .star-rating label.rb3l:hover  ~ label.rb:nth-last-of-type(8)  { display: block; }
+  .star-rating label.rb4l:hover  ~ label.rb:nth-last-of-type(7)  { display: block; }
+  .star-rating label.rb5l:hover  ~ label.rb:nth-last-of-type(6)  { display: block; }
+  .star-rating label.rb6l:hover  ~ label.rb:nth-last-of-type(5)  { display: block; }
+  .star-rating label.rb7l:hover  ~ label.rb:nth-last-of-type(4)  { display: block; }
+  .star-rating label.rb8l:hover  ~ label.rb:nth-last-of-type(3)  { display: block; }
+  .star-rating label.rb9l:hover  ~ label.rb:nth-last-of-type(2)  { display: block; }
+  .star-rating label.rb10l:hover ~ label.rb:nth-last-of-type(1)  { display: block; }
