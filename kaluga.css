@@ -135,78 +135,92 @@
   /* =====================================================================
      HEADER — logo, user info, donation heart
      ===================================================================== */
-  /* CSS-drawn power-button mark + wordmark */
+  /* =====================================================================
+     LOGO — tracked caps, warm sand suffix (14d), large.
+     The mark is one inline SVG on ::before; the wordmark is ::after, split
+     two-tone with background-clip:text since a single pseudo-element can't
+     hold two colours. Both pseudos are reset first: the block they replace
+     positioned and sized them absolutely, and those values would otherwise
+     win through the cascade.
+
+     Other sizes — swap the four numbers together:
+       medium       mark 36px · gap 15px · font 20px · tracking .165em
+       extra large  mark 48px · gap 19px · font 26px · tracking .145em
+     The mark's data-URI has its coordinates baked at its px size, so a new
+     size means regenerating it (or scaling background-size and width/height
+     together and letting it stretch). */
   #logo {
-    margin: 12px 10px 7px;
-    display: inline-block;
-    width: 21px;
-    height: 21px;
-    border-radius: 50%;
     position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 17px;
+    width: auto;
+    height: 42px;
+    margin: 14px 10px 9px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
     cursor: pointer;
-    padding: 6px;
-    border: 3px solid var(--m-accent);
-    background: var(--m-bg);
+    box-sizing: content-box;
   }
   #logo * { box-sizing: border-box; }
-  #logo::after {
-    position: absolute;
-    width: 13px; height: 13px;
-    background: var(--m-bg);
-    left: 7px; top: 7px;
-    content: "";
-    border-radius: inherit;
-    border: 3px solid var(--m-accent);
+  #logo::before, #logo::after {
+    position: static;
+    left: auto; top: auto;
+    width: auto; height: auto;
+    border: 0;
+    border-radius: 0;
+    background: none;
   }
+  /* the power mark */
+  #logo::before {
+    content: "";
+    flex: 0 0 auto;
+    width: 42px; height: 42px;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='42' height='42'><path d='M31.32 8.7 A16.06 16.06 0 1 1 10.68 8.7' fill='none' stroke='%23dfae7f' stroke-width='2.35' stroke-linecap='round'/><line x1='21' y1='4.2' x2='21' y2='18.78' stroke='%23dfae7f' stroke-width='2.35' stroke-linecap='round'/></svg>") no-repeat center/42px 42px;
+  }
+  /* the wordmark */
+  #logo::after {
+    content: "BROADCASTHE.NET";
+    font-family: "Inter", sans-serif;
+    font-size: 23px;
+    font-weight: 600;
+    letter-spacing: .155em;
+    line-height: 1;
+    white-space: nowrap;
+    background: linear-gradient(90deg, var(--m-strong) 0 74%, #dfae7f 74%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  /* the anchor is the click target and nothing else */
   #logo > *:only-child {
     position: absolute;
-    top: -4px; left: -4px; bottom: -4px;
-    width: 300px;
+    inset: 0;
+    width: auto;
     background: none;
-    display: block;
     z-index: 1;
   }
-  #logo > *:only-child::after {
-    content: "";
-    display: block;
-    width: 11px; height: 9px;
-    background: var(--m-bg);
-    left: 15px; top: 9px;
-    position: relative;
-  }
-  #logo > *:only-child::before {
-    content: "";
-    position: absolute;
-    width: 0; height: 11px;
-    border-left: 3px solid var(--m-accent);
-    left: 22px; top: 9px;
-    margin-left: -3px;
-    z-index: 1;
-  }
-  #logo::before {
-    position: absolute;
-    content: "broadcasthe.net";
-    left: 50px; top: -2px;
-    font-size: 26px;
-    font-weight: 800;
-    letter-spacing: -.01em;
-    font-family: "Inter", sans-serif;
-    color: var(--m-strong);
-  }
+  #logo > *:only-child::before,
+  #logo > *:only-child::after { content: none; display: none; }
 
+  /* #logo now occupies real layout width, so this no longer needs to reserve
+     room for it with a width and a right offset */
   #userinfo {
     position: absolute;
-    top: 12px; right: 58px;
-    width: 60%;
+    top: 12px; right: 0;
     text-align: right;
     font-size: 13px;
     color: var(--m-dim);
   }
   #userinfo ul li { display: inline-block; line-height: 1.4em; vertical-align: middle; margin: 0 .1em; padding: 2px; }
   #userinfo a { color: var(--m-accent); }
-  /* the donation badge is absolutely placed at the far right of the header,
-     so the stats row reserves a lane for it */
-  #userinfo_stats { display: inline-block; color: var(--m-dim); font-weight: 400; margin-top: 7px; padding-right: 70px; }
+  /* The donation badge is absolutely placed at the far right of the header, so
+     the stats row reserves a lane for it. 128px = the 70px this was when
+     #userinfo still sat at right:58px, plus that 58px — the offset used to
+     provide part of the clearance, and now the padding provides all of it. */
+  #userinfo_stats { display: inline-block; color: var(--m-dim); font-weight: 400; margin-top: 7px; padding-right: 128px; }
   #userinfo_stats a { color: var(--m-accent); }
   #userinfo_stats .stat { color: var(--m-strong); font-weight: 600; }
   #userinfo_major, #userinfo_username, #userinfo_minor, #searchbutton, .hide { display: none; }
