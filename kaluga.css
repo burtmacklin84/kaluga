@@ -117,6 +117,9 @@
   #header, #content, #wrapper > .thin, .thin { width: var(--gc-width); margin: 0 auto; }
   /* forum pages (forums.php: index, threads, unread…) read better narrower */
   body#forums #content > .thin { width: calc(var(--gc-width) * 0.9); }
+  /* user.php?action=edit is a label+field form with no sidebar, so the full
+     width left it stranded — its widest real field needs ~890px */
+  #content > .thin.useredit { width: calc(var(--gc-width) * 0.8); }
   #header { position: relative; }
   #content { position: relative; overflow: visible; }
 
