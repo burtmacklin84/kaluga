@@ -707,12 +707,13 @@
   /* =====================================================================
      SERIES PAGE
      ===================================================================== */
-  /* NOTE: series.php is not consistent about its body id — captures show both
-     id="torrents" and id="series", server-rendered either way (nothing on the
-     page assigns it). The cause is unestablished; the two known captures also
-     differ in season count, so it may be a page variant rather than a change
-     over time. Hence: scope structurally, and let anything that genuinely
-     needs the page id accept both. */
+  /* NOTE: series.php used to emit body id="torrents" and now emits
+     body id="series" — a site-wide change, confirmed by re-checking the same
+     series that produced the older capture. The id rule below still needs
+     both: series.php for the series page, torrents.php for the torrent detail
+     page, which share this sidebar markup. Everything else here is scoped
+     structurally and rode the change out untouched — worth keeping that way,
+     since the id has moved once already. */
   /* fan-art card: the backdrop fills the card, flush to its edges */
   .box.center > .body:has(> img[onload^="Scale"]) { padding: 0; }
   .box.center > .body > img[onload^="Scale"] { margin: 0; }
