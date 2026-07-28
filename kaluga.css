@@ -451,7 +451,8 @@
   td.tdright { text-align: right; }
 
   #torrent_table { font-size: 11.5px; }   /* browse table runs a step smaller than body text */
-  table.torrent_table, #torrent_table, .torrent_table {
+  /* table.border is the notifications page's torrent list — same card treatment */
+  table.torrent_table, #torrent_table, .torrent_table, #content > table.border {
     background: var(--m-surface);
     border: 0;
     border-radius: var(--m-radius);
@@ -696,12 +697,33 @@
 
   /* of-the-month: two equal cards side by side, posters fill the card,
      text breathes, oversized accent rating */
-  .of_the_month { display: flex; gap: var(--m-gap); align-items: flex-start; }
+  .of_the_month { --otm-poster: 350px; display: flex; gap: var(--m-gap); align-items: flex-start; }
   .of_the_month > .box { float: none !important; flex: 1 1 0; min-width: 0; margin: 0; }
-  .of_the_month img.toolTip { width: 100%; height: auto; margin: 0; display: block; border-radius: 0; }
+  /* posters keep the site's intended 250px (full-bleed stretched them to ~540px).
+     TUNING KNOB: --otm-poster above — it sizes the poster AND the text column
+     beneath it, so the two stay the same width. Centered via auto margins. */
+  .of_the_month img.toolTip {
+    width: var(--otm-poster);
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+    display: block;
+    border-radius: var(--m-radius-sm);
+  }
   .of_the_month ul.stats { font-size: 1.1em; margin: 0; padding: 0; }
   .of_the_month ul.stats > li { margin: 0; padding: 10px 16px 14px; }
-  .of_the_month ul.stats > li:first-child { padding: 0; }
+  .of_the_month ul.stats > li:first-child { padding: 14px 16px 0; }
+  /* text block sits directly under the poster, matching its width. The poster
+     width is a FLOOR, not a cap: the short stat block (Featured Series) lands
+     exactly on it, while a long filmography (Featured Actor) grows to fit its
+     longest title instead of wrapping. */
+  .of_the_month ul.stats > li + li {
+    width: max-content;
+    min-width: var(--otm-poster);
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 10px 0 14px;
+  }
   .of_the_month b { font-size: 1.2em; }
   .month_rating {
     font-family: "Inter", sans-serif;
@@ -2218,3 +2240,40 @@
   .ui-dialog .ui-dialog-titlebar-close:hover { background: var(--m-accent-dim) !important; }
   .ui-dialog table { background: transparent; }
   .ui-dialog tr { background: transparent !important; border: 0 !important; }
+
+
+  /* upload.php & torrents.php?action=edit: the field tables sit bare on the
+     page background. Direct-child form scope keeps this off sidebar forms
+     (series page) and filter forms, which live inside their own cards. */
+  #content .thin > form table {
+    background: var(--m-surface);
+    border: 0;
+    border-radius: var(--m-radius);
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+    margin: 0 0 var(--m-gap) 0;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+  }
+  #content .thin > form table td { padding: 9px 14px; }
+  #content .thin > form table td.label { color: var(--m-dim); white-space: nowrap; }
+  #content .thin > form table tr { background: transparent; border: 0; }
+
+
+  /* Series trailer play button: the site absolutely positions it at a
+     hardcoded left:425px, tuned for the old 758px banner — our wider hero
+     left it off-centre. It's a SIBLING of the banner, not a child, so we
+     overlay them with a one-cell grid: centred at any banner size. */
+  center:has(> div > h2 > #banner) { display: grid; justify-items: center; }
+  center:has(> div > h2 > #banner) > div:has(> h2 > #banner),
+  center:has(> div > h2 > #banner) > #playbutton { grid-area: 1 / 1; }
+  center:has(> div > h2 > #banner) > #playbutton {
+    position: static;
+    align-self: center;
+    justify-self: center;
+  }
+
+  /* "Add Trailer" popup box: its list sits flush against the card edges */
+  #addtrailer > ul.nobullet { padding: 12px 16px 14px; }
+  #addtrailer > ul.nobullet > li { padding: 3px 0; }
+  #addtrailer > ul.nobullet > li input[type=text] { margin-right: 6px; }
