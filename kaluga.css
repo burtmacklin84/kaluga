@@ -117,9 +117,6 @@
   #header, #content, #wrapper > .thin, .thin { width: var(--gc-width); margin: 0 auto; }
   /* forum pages (forums.php: index, threads, unread…) read better narrower */
   body#forums #content > .thin { width: calc(var(--gc-width) * 0.9); }
-  /* user.php?action=edit is a label+field form with no sidebar, so the full
-     width left it stranded — its widest real field needs ~890px */
-  #content > .thin.useredit { width: calc(var(--gc-width) * 0.8); }
   #header { position: relative; }
   #content { position: relative; overflow: visible; }
 
@@ -939,48 +936,16 @@
   }
   body .midbar .box { padding: 14px; }
 
-  /* coda-slider.css hardcodes 792px on the rail, its viewport and every panel.
-     Ours loads first, so widening them needs !important. The slider's JS reads
-     the panel width at DOMReady to size the rail, so it still adds up. */
-  #slider, #slider .scroll { width: 100% !important; }
-  /* A panel has to be exactly as wide as the viewport it scrolls through, or
-     the next one peeks in. Arithmetic can't supply that: the profile page puts
-     the slider in .midbar while user.php?action=edit puts it straight in
-     .thin. So the rail becomes a flex row and each panel takes a full basis of
-     it, which resolves against the viewport whatever the page. The rail's
-     width:auto must beat the inline px the slider's JS writes. */
-  #slider .scrollContainer {
-    display: flex;
-    align-items: flex-start;
-    width: auto !important;
-  }
-  #slider .scrollContainer > .panel { flex: 0 0 100%; }
-  #slider .scrollContainer > :not(.panel) { flex: 0 0 auto; }
-
-  /* The rail is as tall as its tallest panel, so a short tab (Preferences)
-     was left sitting in a card stretched to the height of the longest one.
-     The profile page's slider JS collapses the inactive panels itself with
-     inline heights — which win over this — but user.php?action=edit ships
-     without that hack, so the same thing is done here: collapse them all and
-     expand the one whose tab is selected. Tabs and panels are positional
-     twins, which is how the slider itself pairs them. */
-  /* Collapsed with max-height, not height: the site ships
-     `.useredit .scrollContainer div.panel { height: auto !important }`, which
-     no height of ours can outrank. max-height isn't contested, and min-height
-     stops a flex item's automatic minimum size clamping it back up. */
-  #slider .scrollContainer > .panel { max-height: 0; min-height: 0; overflow: hidden; }
-  #slider:has(.navigation li:nth-child(1) a.selected) .scrollContainer > .panel:nth-child(1),
-  #slider:has(.navigation li:nth-child(2) a.selected) .scrollContainer > .panel:nth-child(2),
-  #slider:has(.navigation li:nth-child(3) a.selected) .scrollContainer > .panel:nth-child(3),
-  #slider:has(.navigation li:nth-child(4) a.selected) .scrollContainer > .panel:nth-child(4),
-  #slider:has(.navigation li:nth-child(5) a.selected) .scrollContainer > .panel:nth-child(5),
-  #slider:has(.navigation li:nth-child(6) a.selected) .scrollContainer > .panel:nth-child(6),
-  #slider:has(.navigation li:nth-child(7) a.selected) .scrollContainer > .panel:nth-child(7),
-  #slider:has(.navigation li:nth-child(8) a.selected) .scrollContainer > .panel:nth-child(8),
-  /* before the slider's JS marks a tab, so the first panel isn't blank */
-  #slider:not(:has(.navigation a.selected)) .scrollContainer > .panel:first-child {
-    max-height: none;
-    overflow: visible;
+  /* coda-slider.css hardcodes 792px on the rail, its viewport and every panel,
+     and ours loads first, so widening them needs !important. Scoped to
+     .midbar, which only the profile page has — user.php?action=edit puts its
+     slider straight in .thin, and it is left entirely on the site's own
+     sizing, where it already behaved. The slider's JS reads the panel width at
+     DOMReady to size the rail, so the total still adds up. */
+  .midbar #slider,
+  .midbar #slider .scroll { width: 100% !important; }
+  .midbar #slider .scrollContainer div.panel {
+    width: calc(var(--gc-width) - var(--gc-sidebar) - var(--m-col-gap)) !important;
   }
   /* the Info tab's stats are four floated 191px columns, which left a third of
      the widened panel empty — as equal tracks they fill it and still wrap */
