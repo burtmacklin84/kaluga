@@ -136,7 +136,7 @@
      HEADER — logo, user info, donation heart
      ===================================================================== */
   /* =====================================================================
-     LOGO — tracked caps, warm sand suffix (14d), large.
+     LOGO — tracked caps, heritage gold suffix, large.
      The mark is one inline SVG on ::before; the wordmark is ::after, split
      two-tone with background-clip:text since a single pseudo-element can't
      hold two colours. Both pseudos are reset first: the block they replace
@@ -173,12 +173,16 @@
     border-radius: 0;
     background: none;
   }
-  /* the power mark */
+  /* the power mark. Gold #e0d055 is the theme's heritage hue — the same
+     colour as the unread-forum disc, which is itself a power mark in a
+     circle, so the two rhyme deliberately. It's also the one warm,
+     non-interactive colour here: blue stays the language of links, buttons
+     and active states, and the logo stays out of it. */
   #logo::before {
     content: "";
     flex: 0 0 auto;
     width: 42px; height: 42px;
-    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='42' height='42'><path d='M31.32 8.7 A16.06 16.06 0 1 1 10.68 8.7' fill='none' stroke='%23dfae7f' stroke-width='2.35' stroke-linecap='round'/><line x1='21' y1='4.2' x2='21' y2='18.78' stroke='%23dfae7f' stroke-width='2.35' stroke-linecap='round'/></svg>") no-repeat center/42px 42px;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='42' height='42'><path d='M31.32 8.7 A16.06 16.06 0 1 1 10.68 8.7' fill='none' stroke='%23e0d055' stroke-width='2.35' stroke-linecap='round'/><line x1='21' y1='4.2' x2='21' y2='18.78' stroke='%23e0d055' stroke-width='2.35' stroke-linecap='round'/></svg>") no-repeat center/42px 42px;
   }
   /* the wordmark */
   #logo::after {
@@ -189,7 +193,7 @@
     letter-spacing: .155em;
     line-height: 1;
     white-space: nowrap;
-    background: linear-gradient(90deg, var(--m-strong) 0 74%, #dfae7f 74%);
+    background: linear-gradient(90deg, var(--m-strong) 0 74%, #e0d055 74%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
