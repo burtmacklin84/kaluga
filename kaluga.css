@@ -946,24 +946,56 @@
   :is(td, a, span, div):has(> img[src$="series-hd.png"])  { --c: var(--cat-hd); --q: "HD"; --l: "SEASON"; }
   :is(td, a, span, div):has(> img[src$="series-sd.png"])  { --c: var(--cat-sd); --q: "SD"; --l: "SEASON"; }
 
-  :is(td, a, span, div):has(> img:is([src$="episode-hd.png"], [src$="episode-sd.png"], [src$="series-hd.png"], [src$="series-sd.png"])) {
+  /* LINKED case (browse): the <a> is an inline box inside a normal cell, so the
+     cell's own vertical-align keeps the badge centred at any row height. */
+  :is(a, span, div):has(> img:is([src$="episode-hd.png"], [src$="episode-sd.png"], [src$="series-hd.png"], [src$="series-sd.png"])) {
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     box-sizing: border-box; width: 58px; height: 44px; gap: 2px;
     border: 1.5px solid var(--c); border-radius: 8px;
     color: var(--c); background: transparent;
     font-family: "Inter", sans-serif; line-height: 1; text-decoration: none;
   }
-  :is(td, a, span, div):has(> img:is([src$="episode-hd.png"], [src$="episode-sd.png"], [src$="series-hd.png"], [src$="series-sd.png"]))::before {
+  :is(a, span, div):has(> img:is([src$="episode-hd.png"], [src$="episode-sd.png"], [src$="series-hd.png"], [src$="series-sd.png"]))::before {
     content: var(--q); font-size: 19px; font-weight: 800; letter-spacing: -.02em;
   }
-  :is(td, a, span, div):has(> img:is([src$="episode-hd.png"], [src$="episode-sd.png"], [src$="series-hd.png"], [src$="series-sd.png"]))::after {
+  :is(a, span, div):has(> img:is([src$="episode-hd.png"], [src$="episode-sd.png"], [src$="series-hd.png"], [src$="series-sd.png"]))::after {
     content: var(--l); font-size: 7.5px; font-weight: 600; letter-spacing: .13em;
   }
-  /* season = solid plate, episode = outline */
-  :is(td, a, span, div):has(> img[src$="series-hd.png"]),
-  :is(td, a, span, div):has(> img[src$="series-sd.png"]) {
+  :is(a, span, div):has(> img[src$="series-hd.png"]),
+  :is(a, span, div):has(> img[src$="series-sd.png"]) {
     background: var(--c); color: var(--cat-ink);
   }
+
+  /* UNLINKED case (top10, notifications): the icon sits straight in the cell.
+     Do NOT make the cell a flex container — that drops it out of table layout
+     and pins the badge to the top of tall rows (e.g. when a banner userscript
+     stretches them). Keep it a real table-cell and centre the badge with
+     absolutely-positioned pseudo-elements instead. */
+  td:has(> img:is([src$="episode-hd.png"], [src$="episode-sd.png"], [src$="series-hd.png"], [src$="series-sd.png"])) {
+    position: relative;
+    width: 58px; height: 44px;
+    text-align: center; vertical-align: middle;
+    color: var(--c);
+    font-family: "Inter", sans-serif;
+  }
+  td:has(> img:is([src$="episode-hd.png"], [src$="episode-sd.png"], [src$="series-hd.png"], [src$="series-sd.png"]))::before {
+    content: var(--q);
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    box-sizing: border-box;
+    display: flex; align-items: center; justify-content: center;
+    width: 58px; height: 44px; padding-bottom: 12px;
+    border: 1.5px solid var(--c); border-radius: 8px;
+    font-size: 19px; font-weight: 800; letter-spacing: -.02em; line-height: 1;
+  }
+  td:has(> img:is([src$="episode-hd.png"], [src$="episode-sd.png"], [src$="series-hd.png"], [src$="series-sd.png"]))::after {
+    content: var(--l);
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, 6px);
+    font-size: 7.5px; font-weight: 600; letter-spacing: .13em; line-height: 1;
+  }
+  td:has(> img[src$="series-hd.png"]),
+  td:has(> img[src$="series-sd.png"]) { color: var(--cat-ink); }
+  td:has(> img[src$="series-hd.png"])::before,
+  td:has(> img[src$="series-sd.png"])::before { background: var(--c); }
 
   /* ---- row actions: download + report ---- */
   img[src$="download.png"] {
