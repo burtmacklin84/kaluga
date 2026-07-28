@@ -981,31 +981,50 @@
      SHARED MISC — pagination, tags, tabs, rank, popups, bbcode
      ===================================================================== */
   /* linkbox — one element, four jobs: the action strip under a banner, the
-     Top 10 tabs, forum links, and the 1-50 | 51-100 pager. Rendered as pills.
-     font-size:0 on the container collapses the site's literal "|" separators
-     and stray <br>s to nothing; the children re-declare their own size. */
-  /* Deliberately inline flow rather than flex: some of these carry <br>s that
-     mean something (recommend.php puts [Add], the pager and its two search
-     forms on three lines), and a <br> is given zero width as a flex item, so
-     flex silently swallowed those breaks. Inline-block pills in a centred
-     block keep the markup's own line structure. */
+     Top 10 tabs, forum links, and the 1-50 | 51-100 pager. Only the first two
+     kinds become pills — the strips that act like toolbars/tabs. Pagers and
+     forum links stay plain text: pills there just added noise, and the site's
+     own "|" separators and [brackets] read fine.
+
+     PILL SCOPE (repeated below, CSS has no selector aliases):
+       center + div.linkbox                       series action strip
+       h2:has(a > img) + div.linkbox              torrent-detail action strip
+       td > div.linkbox                           peer/file list strip
+       div.linkbox:has(> a[href*="top10.php"])    Top 10 tabs */
+
+  /* ---- base: plain centred text (pager, forum links, recommend, requests) */
   div.linkbox {
     display: block;
     text-align: center;
     padding: 0;
     margin: 10px 0 var(--m-gap);
-    font-size: 0;
+    color: var(--m-dim);
+    font-size: 12px;
   }
   div.linkbox:empty { display: none; }
-  div.linkbox > a,
-  div.linkbox > strong {
+  div.linkbox a { color: var(--m-accent); }
+  div.linkbox a:hover, div.linkbox a:focus { color: var(--m-strong); }
+  div.linkbox a strong { font-weight: 400; }
+  /* the pager's current page is a bare <strong> */
+  div.linkbox > strong { color: var(--m-strong); font-weight: 700; }
+
+  /* ---- pill scope: inline-block pills in a centred block. font-size:0
+     collapses the "|" separator text nodes; inline flow (not flex) keeps any
+     <br>s meaningful. */
+  :is(center + div.linkbox,
+      h2:has(a > img) + div.linkbox,
+      td > div.linkbox,
+      div.linkbox:has(> a[href*="top10.php"])) { font-size: 0; }
+  :is(center + div.linkbox,
+      h2:has(a > img) + div.linkbox,
+      td > div.linkbox,
+      div.linkbox:has(> a[href*="top10.php"])) > a {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     vertical-align: middle;
     margin: 3px;            /* the row rhythm, since there's no flex gap */
     height: 26px;
-    padding: 0 12px;
     border: 1px solid var(--m-line);
     border-radius: 999px;
     background: var(--m-surface-2);
@@ -1016,38 +1035,10 @@
     white-space: nowrap;
     text-decoration: none;
     transition: background .15s ease, color .15s ease, border-color .15s ease;
-  }
-  div.linkbox > a:hover,
-  div.linkbox > a:focus {
-    background: var(--m-surface-3);
-    border-color: var(--m-accent-dim);
-    color: var(--m-strong);
-  }
-  /* the current page in the pager is a bare <strong>; the current Top 10 tab is
-     a <strong> INSIDE its link. Both read as the active pill — but the pager
-     wraps every page link in <strong> too, so the tab rule stays scoped to
-     top10 or the whole pager would light up. */
-  div.linkbox > strong,
-  div.linkbox:has(> a[href*="top10.php"]) > a:has(> strong) {
-    background: var(--m-accent);
-    border-color: var(--m-accent);
-    color: #0b1520;
-  }
-  div.linkbox:has(> a[href*="top10.php"]) > a:has(> strong):hover {
-    background: var(--m-strong);
-    border-color: var(--m-strong);
-    color: #0b1520;
-  }
-  div.linkbox > a > strong { font-weight: 600; color: inherit; }
-
-  /* Gazelle bakes the [square brackets] into the link text on detail pages and
-     the Top 10 tabs. There's no selector for a character, so the pill clips
-     itself and parks a strip of its own background over each bracket — the
-     glyphs still occupy space, which simply reads as the pill's padding. */
-  :is(center + div.linkbox,
-      h2:has(a > img) + div.linkbox,
-      td > div.linkbox,
-      div.linkbox:has(> a[href*="top10.php"])) > a {
+    /* Gazelle bakes the [square brackets] into the link text here. There's no
+       selector for a character, so the pill clips itself and parks a strip of
+       its own background over each bracket — the glyph still occupies space,
+       which simply reads as the pill's padding. */
     position: relative;
     overflow: hidden;
     padding: 0 7px;
@@ -1078,6 +1069,30 @@
       h2:has(a > img) + div.linkbox,
       td > div.linkbox,
       div.linkbox:has(> a[href*="top10.php"])) > a::after { right: 0; }
+  :is(center + div.linkbox,
+      h2:has(a > img) + div.linkbox,
+      td > div.linkbox,
+      div.linkbox:has(> a[href*="top10.php"])) > a:hover,
+  :is(center + div.linkbox,
+      h2:has(a > img) + div.linkbox,
+      td > div.linkbox,
+      div.linkbox:has(> a[href*="top10.php"])) > a:focus {
+    background: var(--m-surface-3);
+    border-color: var(--m-accent-dim);
+    color: var(--m-strong);
+  }
+  /* Top 10 marks the current tab with a <strong> inside its link */
+  div.linkbox:has(> a[href*="top10.php"]) > a:has(> strong) {
+    background: var(--m-accent);
+    border-color: var(--m-accent);
+    color: #0b1520;
+  }
+  div.linkbox:has(> a[href*="top10.php"]) > a:has(> strong):hover {
+    background: var(--m-strong);
+    border-color: var(--m-strong);
+    color: #0b1520;
+  }
+  div.linkbox:has(> a[href*="top10.php"]) > a > strong { font-weight: 600; }
 
   /* torrent tags */
   .tags { font-style: italic; padding: 0 0 0 20px; }
