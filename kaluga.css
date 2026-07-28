@@ -846,7 +846,9 @@
   body ul.navigation a:hover, body ul.navigation a:focus { color: var(--m-strong); background: var(--m-surface-3); text-decoration: none; }
   body ul.navigation a:active, body ul.navigation a.selected { color: #0b1520; background: var(--m-accent); }
 
-  .user_profile > h2:first-child { font-weight: 500; padding-left: 209px; }
+  /* the username line sits above the columns; the offset centres it over the
+     content column rather than the whole page, so it tracks the leftbar */
+  .user_profile > h2:first-child { font-weight: 500; padding-left: calc(var(--gc-sidebar) + var(--m-col-gap)); }
   .user_profile > h2:first-child img { max-height: 16px; }
 
   /* profile side panels */
@@ -860,11 +862,61 @@
   .box.tvshows .snatches + .pad { padding: 0; }
   .box.tvshows .pad { font-size: inherit; padding-bottom: 1.2em; }
 
-  /* settings two-column (leftbar nav + midbar content) */
-  body .leftbar { width: 191px; padding: 0 0 0 16px; background: var(--m-surface-2); border-radius: var(--m-radius); }
-  body .leftbar img { width: 100%; margin: 0; }
-  body .leftbar ul li { display: block; }
+  /* ---- user.php two-column (leftbar + midbar) ----
+     This page predates .sidebar/.main_column: it floats .leftbar and gives
+     .midbar a matching left margin. We keep that mechanism but retune it to
+     the site's own column metrics, so the profile lines up with every other
+     page instead of sitting in its own narrower world. */
+  body .leftbar {
+    float: left;
+    width: var(--gc-sidebar);
+    padding: 0;
+    background: var(--m-surface);
+    border-radius: var(--m-radius);
+    overflow: hidden;
+  }
+  body .leftbar > img { display: block; width: 100%; margin: 0; }
+  body .leftbar ul { margin: 0; padding: 10px 14px; }
+  body .leftbar ul:empty, body .leftbar .space { display: none; }
+  body .leftbar ul li { display: block; margin: 0; padding: 3px 0; }
+  /* "[Edit Profile]" — here the brackets are text nodes in the li rather than
+     inside the link, so zeroing the li's font size drops them outright and the
+     link just declares its own size back. Guarded on the avatar, since the
+     settings page reuses .leftbar for its section nav. */
+  body .leftbar:has(> img) ul li:has(> a) { font-size: 0; }
+  body .leftbar:has(> img) ul li > a { font-size: 12.5px; }
+  body .leftbar:has(> img) ul li:not(:has(> a)) {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    color: var(--m-dim);
+    padding-bottom: 4px;
+  }
+  body .midbar {
+    margin-left: calc(var(--gc-sidebar) + var(--m-col-gap));
+    margin-right: 0;
+    width: auto;
+  }
   body .midbar .box { padding: 14px; }
+
+  /* coda-slider.css hardcodes 792px on the rail, its viewport and every panel.
+     Ours loads first, so widening them needs !important. The slider's JS reads
+     the panel width at DOMReady to size the rail, so it still adds up. */
+  #slider, #slider .scroll { width: 100% !important; }
+  #slider .scrollContainer div.panel {
+    width: calc(var(--gc-width) - var(--gc-sidebar) - var(--m-col-gap)) !important;
+  }
+  /* the Info tab's stats are four floated 191px columns, which left a third of
+     the widened panel empty — as equal tracks they fill it and still wrap */
+  #section2 .statistics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 0 20px;
+    padding: 4px 14px;
+  }
+  #section2 .statistics > .floatleft { float: none; width: auto; }
+  #section2 .statistics > .clearboth { display: none; }
   body .password_strength_bg, body .password_strength_container, body .password_strength { width: 289px; }
   body .password_strength_bg { background: var(--m-surface-2); }
 
@@ -2417,8 +2469,17 @@
   .star-rating {
     position: relative !important; display: inline-block;
     width: 177px !important; height: 8px !important;
+    /* the top margin is the readout's lane — it hangs 30px above the track,
+       and with the site's zero margin it landed up inside the card header.
+       Zeroing the sides drops hover-rating.css's -32px nudge so the plain
+       text-align:center of the surrounding .center div lands it dead centre. */
+    margin: 38px 0 14px !important;
     --v: 0%; --c: #232732;
   }
+  /* the site reserves a 50px left gutter here for the old "zero stars" hit
+     area — ours sits at -20px inside the widget, so the gutter only skewed
+     the centring, and the fixed height clipped the taller widget */
+  article:has(> .star-rating) { height: auto !important; padding-left: 0 !important; }
   .star-rating input { display: none !important; }
 
   /* value + colour, from whichever radio is checked */
