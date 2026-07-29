@@ -2401,19 +2401,25 @@
   .torrent-field[data-custom] + br,
   .torrent-field[data-type] + br { display: none; }
   a[onclick*="swapDisplay"] span[style*="margin-left: 1em"] { margin-left: 0 !important; }
-  .torrent-field[data-key="Subs"]::before, abbr[data-key="Subs"]::before { content: " / "; color: var(--m-dim); }
+  /* The highlighter puts the audio/subtitle group in its own container on the
+     torrent and series pages, where it needs a leading separator to join the
+     format string. On browse, top 10 and requests it joins the same fields
+     inline with " / " already — so this only fires when the field STARTS its
+     container, otherwise those pages render "Scene /  / Subs". */
+  .torrent-field[data-key="Subs"]:first-child::before,
+  abbr[data-key="Subs"]:first-child::before { content: " / "; color: var(--m-dim); }
   /* Series-page (discog) rows carry the same two-line format string, but
      their anchor links by torrentid instead of carrying a swapDisplay
      onclick, so the rule above can't reach them. Same collapse, same
      separator: the trailing group is the only span holding an <abbr>. */
   .torrent_table tr.group_torrent td a[href*="torrentid"] br { display: none; }
-  .torrent_table tr.group_torrent td a[href*="torrentid"] > span:has(abbr):not(:has(abbr[data-key]))::before {
+  .torrent_table tr.group_torrent td a[href*="torrentid"] > span:has(abbr):not(:has([data-key]))::before {
     content: " / "; color: var(--m-dim);
   }
 
   /* …and the same separator for the untagged markup you get with the
      userscript off, guarded so the two can never both fire */
-  a[onclick*="swapDisplay"] span[style*="margin-left: 1em"]:not(:has(abbr[data-key]))::before {
+  a[onclick*="swapDisplay"] span[style*="margin-left: 1em"]:not(:has([data-key]))::before {
     content: " / "; color: var(--m-dim);   /* --m-dim, matching the rule above;
                                               --m-line is a border tone and
                                               disappears against the row */
