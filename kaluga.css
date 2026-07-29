@@ -890,10 +890,12 @@
      served from the same GitHub Pages site as this stylesheet, so they
      can't outlive the CSS or depend on a third-party host.
 
-     Each is matched on the hash BTN caches it under. The trailing
-     `/resized_wNNN.png` is the image resizer's generic output and is shared
-     with real artwork — the hash before it is what's unique, so that is
-     what these key on. The avatar has no resizer step and matches on path.
+     BTN ships TWO placeholder families and uses both. The cached set is
+     matched on the hash BTN stores it under — the trailing `/resized_wNNN.png`
+     is the resizer's generic output, shared with real artwork, so the hash
+     before it is what's unique. The older `common/` set (light grey, "NO IMAGE
+     AVAILABLE") is matched on its path; substring matching also catches the
+     double slash BTN emits for the banner. There is no `common/` fan art.
 
      image-set() serves 2x to retina and 1x to everything else; the plain
      url() above each one is the fallback for browsers without it.
@@ -901,13 +903,17 @@
   img[src*="common/avatars/default.png"] {
     content: url("https://burtmacklin84.github.io/kaluga/art/no-avatar.jpg");
   }
-  img[src*="i.imgur.com/hIq9qAn"] {        /* no banner — 758×140 */
+  img[src*="i.imgur.com/hIq9qAn"],
+  img[src*="common/banner/nobanner.png"] {   /* no banner — both are 758×140 */
     content: url("https://burtmacklin84.github.io/kaluga/art/nobanner.png");
     content: image-set(
       url("https://burtmacklin84.github.io/kaluga/art/nobanner.png") 1x,
       url("https://burtmacklin84.github.io/kaluga/art/nobanner@2x.png") 2x);
   }
-  img[src*="i.imgur.com/qHx6IsI"] {        /* no poster — 300×500 */
+  img[src*="i.imgur.com/qHx6IsI"],
+  img[src*="common/posters/noposter.png"] {  /* no poster — 300×500; the
+                                                common/ one is 300×441, so its
+                                                slot grows a little */
     content: url("https://burtmacklin84.github.io/kaluga/art/noposter.png");
     content: image-set(
       url("https://burtmacklin84.github.io/kaluga/art/noposter.png") 1x,
