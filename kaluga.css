@@ -904,7 +904,12 @@
     content: url("https://burtmacklin84.github.io/kaluga/art/no-avatar.jpg");
   }
   img[src*="i.imgur.com/hIq9qAn"],
-  img[src*="common/banner/nobanner.png"] {   /* no banner — both are 758×140 */
+  img[src*="common/banner/nobanner.png"],
+  img[src*="btn_no_image.png"] {             /* no banner — the first two are
+                                                758×140; btn_no_image is 170×40,
+                                                but every banner in a 170×40 slot
+                                                is squashed by the site anyway,
+                                                so ours gets the same treatment */
     content: url("https://burtmacklin84.github.io/kaluga/art/nobanner.png");
     content: image-set(
       url("https://burtmacklin84.github.io/kaluga/art/nobanner.png") 1x,
@@ -1357,20 +1362,20 @@
 
   /* ---- torrent flags: hairline outlines, one hue each ---- */
   img[src$="20x.png"] {
-    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='46' height='16'><rect x='.5' y='.5' width='45' height='15' rx='3' fill='none' stroke='%23e0d055'/><text x='23' y='11.5' text-anchor='middle' font-family='Inter,Helvetica,Arial,sans-serif' font-size='9' font-weight='700' letter-spacing='.6' fill='%23e0d055'>2.0x</text></svg>") no-repeat;
-    background-size: 46px 16px; height: 16px; padding-left: 46px; width: 0; border-radius: 0;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='56' height='16'><rect x='.5' y='.5' width='55' height='15' rx='3' fill='none' stroke='%23e0d055'/><text x='28' y='11.5' text-anchor='middle' font-family='Inter,Helvetica,Arial,sans-serif' font-size='9' font-weight='700' letter-spacing='.6' fill='%23e0d055'>2.0x</text></svg>") no-repeat;
+    background-size: 56px 16px; height: 16px; padding-left: 56px; width: 0; border-radius: 0;
   }
   img[src$="fast.png"] {
-    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='46' height='16'><rect x='.5' y='.5' width='45' height='15' rx='3' fill='none' stroke='%236fce8f'/><text x='23' y='11.5' text-anchor='middle' font-family='Inter,Helvetica,Arial,sans-serif' font-size='9' font-weight='700' letter-spacing='.6' fill='%236fce8f'>FAST</text></svg>") no-repeat;
-    background-size: 46px 16px; height: 16px; padding-left: 46px; width: 0; border-radius: 0;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='56' height='16'><rect x='.5' y='.5' width='55' height='15' rx='3' fill='none' stroke='%236fce8f'/><text x='28' y='11.5' text-anchor='middle' font-family='Inter,Helvetica,Arial,sans-serif' font-size='9' font-weight='700' letter-spacing='.6' fill='%236fce8f'>FAST</text></svg>") no-repeat;
+    background-size: 56px 16px; height: 16px; padding-left: 56px; width: 0; border-radius: 0;
   }
   img[src$="new.png"] {
-    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='46' height='16'><rect x='.5' y='.5' width='45' height='15' rx='3' fill='none' stroke='%237ab0e0'/><text x='23' y='11.5' text-anchor='middle' font-family='Inter,Helvetica,Arial,sans-serif' font-size='9' font-weight='700' letter-spacing='.6' fill='%237ab0e0'>NEW</text></svg>") no-repeat;
-    background-size: 46px 16px; height: 16px; padding-left: 46px; width: 0; border-radius: 0;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='56' height='16'><rect x='.5' y='.5' width='55' height='15' rx='3' fill='none' stroke='%237ab0e0'/><text x='28' y='11.5' text-anchor='middle' font-family='Inter,Helvetica,Arial,sans-serif' font-size='9' font-weight='700' letter-spacing='.6' fill='%237ab0e0'>NEW</text></svg>") no-repeat;
+    background-size: 56px 16px; height: 16px; padding-left: 56px; width: 0; border-radius: 0;
   }
   img[src$="auto.png"] {
-    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='46' height='16'><rect x='.5' y='.5' width='45' height='15' rx='3' fill='none' stroke='%23b385f5'/><text x='23' y='11.5' text-anchor='middle' font-family='Inter,Helvetica,Arial,sans-serif' font-size='9' font-weight='700' letter-spacing='.6' fill='%23b385f5'>AUTO</text></svg>") no-repeat;
-    background-size: 46px 16px; height: 16px; padding-left: 46px; width: 0; border-radius: 0;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='56' height='16'><rect x='.5' y='.5' width='55' height='15' rx='3' fill='none' stroke='%23b385f5'/><text x='28' y='11.5' text-anchor='middle' font-family='Inter,Helvetica,Arial,sans-serif' font-size='9' font-weight='700' letter-spacing='.6' fill='%23b385f5'>AUTO</text></svg>") no-repeat;
+    background-size: 56px 16px; height: 16px; padding-left: 56px; width: 0; border-radius: 0;
   }
   img[src$="foreign.png"] {
     background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='56' height='16'><rect x='.5' y='.5' width='55' height='15' rx='3' fill='none' stroke='%2358d6e0'/><text x='28' y='11.5' text-anchor='middle' font-family='Inter,Helvetica,Arial,sans-serif' font-size='9' font-weight='700' letter-spacing='.6' fill='%2358d6e0'>FOREIGN</text></svg>") no-repeat;
