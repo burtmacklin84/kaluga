@@ -39,9 +39,10 @@
     --gc-max-width: 1440px;
     --gc-width: min(94vw, var(--gc-max-width));
     --gc-sidebar: 290px;
-    /* the main↔sidebar gap mirrors the browser-edge gutter, so the three
-       gaps across the page read as one consistent rhythm */
-    --m-col-gap: min(calc((100vw - var(--gc-width)) / 2), 48px);
+    /* the main↔sidebar gap. Deliberately tighter than the browser-edge
+       gutter: the page is capped well below the viewport, so the columns
+       read better close together than matched to the outer margin. */
+    --m-col-gap: min(calc((100vw - var(--gc-width)) / 2), 24px);
     /* upload.php's single centred column — the site inlines 700px on the
        "do not upload" block, so the form below is matched to it */
     --upload-col: 700px;
@@ -1956,7 +1957,7 @@
 
   /* Sources */
   .Internal {
-    color: #86cb38 !important;
+    color: #6ee04a !important;   /* was #86cb38 — matched to [data-type] */
   }
 
   .None {
@@ -1964,11 +1965,11 @@
   }
 
   .P2P {
-    color: #b18d9e !important;
+    color: #ae83cc !important;   /* was #b18d9e — matched to [data-type] */
   }
 
   .Scene {
-    color: #a4b293 !important;
+    color: #e84c4c !important;   /* was #a4b293 — matched to [data-type] */
   }
 
   .User {
