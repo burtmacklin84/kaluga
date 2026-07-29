@@ -5,7 +5,7 @@
 
    Load via Settings -> External CSS.
    ============================================================ */
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Hanken+Grotesk:wght@400;500&family=IBM+Plex+Mono:wght@400;500;600&display=swap");
 
 /* =====================================================================
      KALUGA — a modern dark theme for BroadcasTheNet.
@@ -46,6 +46,9 @@
     /* upload.php's single centred column — the site inlines 700px on the
        "do not upload" block, so the form below is matched to it */
     --upload-col: 700px;
+    /* torrent-table data face + its optical-size compensation */
+    --m-data: "Hanken Grotesk", "Inter", sans-serif;
+    --m-data-size: 13.1px;
   }
 
   /* ---------- Reset / base ---------- */
@@ -530,14 +533,25 @@
   tr.torrent:hover, tr.rowa:hover, tr.rowb:hover,
   .torrent_table tr.group_torrent:hover, .torrent_table tr.group_torrent:hover td { background: var(--m-surface-3); }
   .torrent_table tr.group_torrent td { padding: 6px 10px; background: transparent; }
-  .torrent_table tr.group_torrent td a span { float: left; white-space: pre; }
+  /* This span holds the audio/subtitle group, which the site puts on a second
+     line after a <br>. We hide that <br> to collapse the row, so the old
+     float:left now drags the group in front of the "»" instead of leaving it
+     at the end. It flows inline. */
+  .torrent_table tr.group_torrent td a span { float: none; white-space: pre; }
   .torrent_table tr.group_torrent.first { border-top: 0; }
   #torrents .main_column .torrent_table td, #torrents .torrent_table td { padding: 6px 9px; }
   .torrent_table .colhead_dark td { padding: 8px 12px; }
 
-  /* numeric columns: mono + tabular so they scan as columns */
-  .torrent_table td.nobr, td.tdright, .torrent span, .group_torrent span, .torrent_table tr.group_torrent .year {
-    font-family: "IBM Plex Mono", monospace;
+  /* The torrent table's data face. Hanken Grotesk rather than a mono: tabular
+     figures give the column alignment mono was there for, without the
+     typewriter texture. Its x-height is 0.493em against Inter's 0.546, so it
+     needs ~7% more size to read at the same weight — hence --m-data-size. */
+  .torrent_table td.nobr, td.tdright, .torrent span, .group_torrent span,
+  .torrent_table tr.group_torrent .year,
+  .torrent_table tr.group_torrent td a {
+    font-family: var(--m-data);
+    font-size: var(--m-data-size);
+    font-weight: 400;
     font-variant-numeric: tabular-nums;
   }
   .nobr { white-space: nowrap; }
@@ -2388,6 +2402,13 @@
   .torrent-field[data-type] + br { display: none; }
   a[onclick*="swapDisplay"] span[style*="margin-left: 1em"] { margin-left: 0 !important; }
   .torrent-field[data-key="Subs"]::before, abbr[data-key="Subs"]::before { content: " / "; color: var(--m-dim); }
+  /* …and the same separator for the untagged markup you get with the
+     userscript off, guarded so the two can never both fire */
+  a[onclick*="swapDisplay"] span[style*="margin-left: 1em"]:not(:has(abbr[data-key]))::before {
+    content: " / "; color: var(--m-dim);   /* --m-dim, matching the rule above;
+                                              --m-line is a border tone and
+                                              disappears against the row */
+  }
   #discog_table span abbr:first-child::before { color: var(--m-dim); }
 
   /* container */
