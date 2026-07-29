@@ -882,13 +882,42 @@
   body#torrents td.avatar, body#user td.avatar { width: 150px; }
   body#torrents td.avatar img, body#user td.avatar img { width: 150px; }
   body#userhistory td.avatar { display: none; }
-  /* Users with no avatar get BTN's own placeholder — a photo of a TV with a
-     blue power glow, which ends up the brightest thing in the avatar column.
-     Swapped for a themed one, served from the same GitHub Pages site as this
-     stylesheet, so it can't outlive the CSS or need a third-party host. The
-     src is unique to the placeholder, so real avatars are untouched. */
+  /* =====================================================================
+     DEFAULT ARTWORK — avatar, banner, poster, fan art
+     BTN's four placeholders are all the same blue-glow-on-TV-static family,
+     and all four end up the brightest thing on screen — backwards for
+     artwork that means "nothing here". Replaced with a quiet themed set,
+     served from the same GitHub Pages site as this stylesheet, so they
+     can't outlive the CSS or depend on a third-party host.
+
+     Each is matched on the hash BTN caches it under. The trailing
+     `/resized_wNNN.png` is the image resizer's generic output and is shared
+     with real artwork — the hash before it is what's unique, so that is
+     what these key on. The avatar has no resizer step and matches on path.
+
+     image-set() serves 2x to retina and 1x to everything else; the plain
+     url() above each one is the fallback for browsers without it.
+     ===================================================================== */
   img[src*="common/avatars/default.png"] {
-    content: url("https://burtmacklin84.github.io/kaluga/no-avatar.jpg");
+    content: url("https://burtmacklin84.github.io/kaluga/art/no-avatar.jpg");
+  }
+  img[src*="i.imgur.com/hIq9qAn"] {        /* no banner — 758×140 */
+    content: url("https://burtmacklin84.github.io/kaluga/art/nobanner.png");
+    content: image-set(
+      url("https://burtmacklin84.github.io/kaluga/art/nobanner.png") 1x,
+      url("https://burtmacklin84.github.io/kaluga/art/nobanner@2x.png") 2x);
+  }
+  img[src*="i.imgur.com/qHx6IsI"] {        /* no poster — 300×500 */
+    content: url("https://burtmacklin84.github.io/kaluga/art/noposter.png");
+    content: image-set(
+      url("https://burtmacklin84.github.io/kaluga/art/noposter.png") 1x,
+      url("https://burtmacklin84.github.io/kaluga/art/noposter@2x.png") 2x);
+  }
+  img[src*="i.imgur.com/55K4Dww"] {        /* no fan art — 758×426 */
+    content: url("https://burtmacklin84.github.io/kaluga/art/nofanart.png");
+    content: image-set(
+      url("https://burtmacklin84.github.io/kaluga/art/nofanart.png") 1x,
+      url("https://burtmacklin84.github.io/kaluga/art/nofanart@2x.png") 2x);
   }
   .signature { border-top: 1px solid var(--m-line); margin: 2em 0 0; padding: .5em 0 0; color: var(--m-dim); }
   .lastedited { display: block; text-align: right; font-size: .8em; font-style: italic; color: var(--m-dim); }
