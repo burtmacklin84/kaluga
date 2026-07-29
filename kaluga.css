@@ -882,6 +882,14 @@
   body#torrents td.avatar, body#user td.avatar { width: 150px; }
   body#torrents td.avatar img, body#user td.avatar img { width: 150px; }
   body#userhistory td.avatar { display: none; }
+  /* Users with no avatar get BTN's own placeholder — a photo of a TV with a
+     blue power glow, which ends up the brightest thing in the avatar column.
+     Swapped for a themed one, served from the same GitHub Pages site as this
+     stylesheet, so it can't outlive the CSS or need a third-party host. The
+     src is unique to the placeholder, so real avatars are untouched. */
+  img[src*="common/avatars/default.png"] {
+    content: url("https://burtmacklin84.github.io/kaluga/no-avatar.jpg");
+  }
   .signature { border-top: 1px solid var(--m-line); margin: 2em 0 0; padding: .5em 0 0; color: var(--m-dim); }
   .lastedited { display: block; text-align: right; font-size: .8em; font-style: italic; color: var(--m-dim); }
   div.user_details { padding: 10px; font-size: 12px; }
