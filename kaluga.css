@@ -1363,7 +1363,13 @@
      them appeared. One shared column, centred on the block above. */
   /* the id alone loses to the generic `#content .thin > form table` margin
      rule above, which would pin these back to the left edge */
-  #content .thin > form#upload_table > table {
+  /* Once a torrent file is chosen, the rest of the form is rendered into
+     div#dynamic_form, a level deeper than the direct-child match reaches, so
+     those fields ran full width again. The Possible Dupes list in there is
+     left out: it's the browse table, banners and all, and needs the room —
+     dupe matching is fuzzy, and the banner is how a false match gets spotted. */
+  #content .thin > form#upload_table > table,
+  #upload_table > #dynamic_form > table:not(.torrent_table) {
     width: var(--upload-col);
     max-width: 100%;
     margin: 0 auto var(--m-gap);
@@ -1372,7 +1378,8 @@
     table-layout: fixed;
   }
   /* wide enough for the longest label, "Submit Autofill:" */
-  #upload_table > table td.label { width: 200px; }
+  #upload_table > table td.label,
+  #upload_table > #dynamic_form > table td.label { width: 200px; }
   /* the two intro lines are h2s, centred by the site while every other cell in
      the stack is left-aligned */
   #upload_table h2 {
@@ -1383,6 +1390,26 @@
     margin: 2px 0;
   }
   #upload_table input[type=text] { max-width: 100%; box-sizing: border-box; }
+  /* cols="60" is wider than the field column — it ran past the card edge */
+  #upload_table textarea { width: 100%; box-sizing: border-box; resize: vertical; }
+  /* the genre picker appends to the tags field beside it; side by side the
+     pair overflowed the column and wrapped unevenly, so they stack */
+  #upload_table #genre_tags { display: block; margin-bottom: 8px; }
+  #upload_table #tags { width: 100%; }
+  /* field hints sat 5px in from the field edge (the global p margin) */
+  #dynamic_form td > p { margin: 6px 0 0; color: var(--m-dim); }
+
+  /* Possible Dupes: its title row reads as a card header, like "Do not upload" */
+  #dynamic_form > #torrent_table tr:first-child > td {
+    padding: 11px 16px;
+    background: var(--m-surface-2);
+    border-bottom: 1px solid var(--m-line);
+  }
+  #dynamic_form > #torrent_table tr:first-child h2 {
+    margin: 0;
+    font-size: 11px; font-weight: 700; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--m-strong);
+  }
   body#rules td, body#irc td { padding: .5em 1em; }
   body#kb .main_column .box .pad { font-size: 13px; padding: 14px; }
 
@@ -1393,7 +1420,7 @@
   /* ---- category badges: outline = episode, filled plate = season --------
      Selectors match on filename only (not the /common/caticons/ path) so they
      apply both live and in the local harness, whose saved pages rewrite srcs. */
-  img:is([src$="episode-hd.png"], [src$="episode-sd.png"], [src$="series-hd.png"], [src$="series-sd.png"]) {
+  img:is([src$="episode-hd.png"], [src$="episode-sd.png"], [src$="series-hd.png"], [src$="series-sd.png"], [src$="season-hd.png"], [src$="season-sd.png"]) {
     width: 0 !important; height: 0 !important; padding: 0 !important;
     background: none !important; filter: none !important;
   }
@@ -1401,24 +1428,28 @@
   :is(td, a, span, div):has(> img[src$="episode-sd.png"]) { --c: var(--cat-sd); --q: "SD"; --l: "EPISODE"; }
   :is(td, a, span, div):has(> img[src$="series-hd.png"])  { --c: var(--cat-hd); --q: "HD"; --l: "SEASON"; }
   :is(td, a, span, div):has(> img[src$="series-sd.png"])  { --c: var(--cat-sd); --q: "SD"; --l: "SEASON"; }
+  /* upload.php's dupe list asks for season-hd/-sd.png, which the CDN doesn't
+     have (404: the rest of the site calls a season "series-"), so without the
+     badge those rows showed a broken image and its alt text */
+  :is(td, a, span, div):has(> img[src$="season-hd.png"]) { --c: var(--cat-hd); --q: "HD"; --l: "SEASON"; }
+  :is(td, a, span, div):has(> img[src$="season-sd.png"]) { --c: var(--cat-sd); --q: "SD"; --l: "SEASON"; }
 
   /* LINKED case (browse): the <a> is an inline box inside a normal cell, so the
      cell's own vertical-align keeps the badge centred at any row height. */
-  :is(a, span, div):has(> img:is([src$="episode-hd.png"], [src$="episode-sd.png"], [src$="series-hd.png"], [src$="series-sd.png"])) {
+  :is(a, span, div):has(> img:is([src$="episode-hd.png"], [src$="episode-sd.png"], [src$="series-hd.png"], [src$="series-sd.png"], [src$="season-hd.png"], [src$="season-sd.png"])) {
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     box-sizing: border-box; width: 58px; height: 44px; gap: 2px;
     border: 1.5px solid var(--c); border-radius: 8px;
     color: var(--c); background: transparent;
     font-family: "Inter", sans-serif; line-height: 1; text-decoration: none;
   }
-  :is(a, span, div):has(> img:is([src$="episode-hd.png"], [src$="episode-sd.png"], [src$="series-hd.png"], [src$="series-sd.png"]))::before {
+  :is(a, span, div):has(> img:is([src$="episode-hd.png"], [src$="episode-sd.png"], [src$="series-hd.png"], [src$="series-sd.png"], [src$="season-hd.png"], [src$="season-sd.png"]))::before {
     content: var(--q); font-size: 19px; font-weight: 800; letter-spacing: -.02em;
   }
-  :is(a, span, div):has(> img:is([src$="episode-hd.png"], [src$="episode-sd.png"], [src$="series-hd.png"], [src$="series-sd.png"]))::after {
+  :is(a, span, div):has(> img:is([src$="episode-hd.png"], [src$="episode-sd.png"], [src$="series-hd.png"], [src$="series-sd.png"], [src$="season-hd.png"], [src$="season-sd.png"]))::after {
     content: var(--l); font-size: 7.5px; font-weight: 600; letter-spacing: .13em;
   }
-  :is(a, span, div):has(> img[src$="series-hd.png"]),
-  :is(a, span, div):has(> img[src$="series-sd.png"]) {
+  :is(a, span, div):has(> img:is([src$="series-hd.png"], [src$="series-sd.png"], [src$="season-hd.png"], [src$="season-sd.png"])) {
     background: var(--c); color: var(--cat-ink);
   }
 
@@ -1427,14 +1458,14 @@
      and pins the badge to the top of tall rows (e.g. when a banner userscript
      stretches them). Keep it a real table-cell and centre the badge with
      absolutely-positioned pseudo-elements instead. */
-  td:has(> img:is([src$="episode-hd.png"], [src$="episode-sd.png"], [src$="series-hd.png"], [src$="series-sd.png"])) {
+  td:has(> img:is([src$="episode-hd.png"], [src$="episode-sd.png"], [src$="series-hd.png"], [src$="series-sd.png"], [src$="season-hd.png"], [src$="season-sd.png"])) {
     position: relative;
     width: 58px; height: 44px;
     text-align: center; vertical-align: middle;
     color: var(--c);
     font-family: "Inter", sans-serif;
   }
-  td:has(> img:is([src$="episode-hd.png"], [src$="episode-sd.png"], [src$="series-hd.png"], [src$="series-sd.png"]))::before {
+  td:has(> img:is([src$="episode-hd.png"], [src$="episode-sd.png"], [src$="series-hd.png"], [src$="series-sd.png"], [src$="season-hd.png"], [src$="season-sd.png"]))::before {
     content: var(--q);
     position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
     box-sizing: border-box;
@@ -1443,15 +1474,13 @@
     border: 1.5px solid var(--c); border-radius: 8px;
     font-size: 19px; font-weight: 800; letter-spacing: -.02em; line-height: 1;
   }
-  td:has(> img:is([src$="episode-hd.png"], [src$="episode-sd.png"], [src$="series-hd.png"], [src$="series-sd.png"]))::after {
+  td:has(> img:is([src$="episode-hd.png"], [src$="episode-sd.png"], [src$="series-hd.png"], [src$="series-sd.png"], [src$="season-hd.png"], [src$="season-sd.png"]))::after {
     content: var(--l);
     position: absolute; left: 50%; top: 50%; transform: translate(-50%, 6px);
     font-size: 7.5px; font-weight: 600; letter-spacing: .13em; line-height: 1;
   }
-  td:has(> img[src$="series-hd.png"]),
-  td:has(> img[src$="series-sd.png"]) { color: var(--cat-ink); }
-  td:has(> img[src$="series-hd.png"])::before,
-  td:has(> img[src$="series-sd.png"])::before { background: var(--c); }
+  td:has(> img:is([src$="series-hd.png"], [src$="series-sd.png"], [src$="season-hd.png"], [src$="season-sd.png"])) { color: var(--cat-ink); }
+  td:has(> img:is([src$="series-hd.png"], [src$="series-sd.png"], [src$="season-hd.png"], [src$="season-sd.png"]))::before { background: var(--c); }
 
   /* ---- row actions: download + report ---- */
   img[src$="download.png"] {
