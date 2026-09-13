@@ -877,6 +877,96 @@
   body#reviews form[action="reviews.php"] input[name=seriesid] { margin-bottom: 10px; }
   body#reviews form[action="reviews.php"] textarea { width: 100%; box-sizing: border-box; margin-top: 5px; }
 
+  /* ---- a single review (reviews.php?id=) ----
+     One paragraph in a full-width card ran ~200 characters a line, so the
+     card narrows to a reading measure beneath the centred title. */
+  body#reviews .thin > .pad.box[style="width: 100%"] {
+    max-width: 860px; margin: 0 auto var(--m-gap); padding: 18px 22px;
+  }
+  /* the series poster. With none the site still emits the <img> with
+     src="" — an invisible 290px float that shoved the text's first line
+     aside — so an empty one takes its wrapper with it */
+  body#reviews .pad.box > div[style*="width: 280px"]:has(> img[src=""]) { display: none; }
+  body#reviews .pad.box > div[style*="width: 280px"] > img {
+    width: 100%; padding: 0 !important; margin: 0 20px 12px 0;
+    border-radius: var(--m-radius-sm);
+  }
+  /* score row, ruled off from the text. flow-root keeps the rule beside a
+     poster rather than running underneath it; the <br> was the site's gap. */
+  body#reviews .pad.box > div:has(> .star-rating-control) {
+    display: flow-root; padding-bottom: 14px; margin-bottom: 14px;
+    border-bottom: 1px solid var(--m-line-soft);
+  }
+  body#reviews .pad.box > div:has(> .star-rating-control) + br { display: none; }
+  body#reviews .pad.box > p[style="font-size: 12pt"] {
+    font-size: 14px !important; line-height: 1.65; color: var(--m-text); margin: 0;
+  }
+
+  /* ---- jQuery Star Rating plugin ----
+     The plugin swaps each radio for a div.star-rating inside
+     span.star-rating-control — the very class the series meter (SERIES
+     RATING, below) is built on, so the meter's 177px track landed on every
+     single star. They take the meter's look instead: 15px notches on an
+     18px pitch and the same red→green ramp. Every size here needs
+     !important and the extra class, to get past both the meter and the
+     plugin's own `background: transparent !important`.
+     The score is a counter of lit notches, printed by the control's
+     ::after: that sits after every star in the tree, so the count is
+     complete, and `order` carries it round to the front of the bar.
+     A live (writable) control swaps .star-rating-on for -hover while the
+     pointer is on it, so both classes count — the bar and number preview
+     the vote. The plugin tracks the pointer per star, so each star is an
+     18px square touching the next, the notch painted inside it: a gap
+     between stars would flash the old score as the pointer crossed it.
+     The ramp uses its own variable: the meter's base rule sets --c on
+     each .star-rating, which would shadow one inherited from here. */
+  .star-rating-control {
+    display: inline-flex; align-items: center;
+    vertical-align: middle; counter-reset: kaluga-score;
+    --score: var(--m-surface-3);
+  }
+  .star-rating-control > div.star-rating {
+    float: none !important; width: 18px !important; height: 18px !important;
+    margin: 0 !important;
+    background: linear-gradient(var(--notch), var(--notch)) 0 50% / 15px 8px no-repeat !important;
+    --notch: var(--m-surface-3);
+  }
+  .star-rating-control > div.star-rating:last-child { width: 15px !important; }
+  .star-rating-control > div.star-rating > a { display: none; }
+  .star-rating-control > div.star-rating:is(.star-rating-on, .star-rating-hover) {
+    --notch: var(--score); counter-increment: kaluga-score;
+  }
+  .star-rating-control::after {
+    content: counter(kaluga-score); order: -1; margin-right: 12px;
+    font: 800 20px/1 "Inter", sans-serif; letter-spacing: -.02em;
+    color: var(--score);
+  }
+  .star-rating-control:not(:has(> div.star-rating:is(.star-rating-on, .star-rating-hover)))::after {
+    content: "–"; color: var(--m-dim);
+  }
+  /* cancel ("clear my vote") shows on writable controls only: a dim ×
+     after the bar in place of the plugin's delete.gif. Hovering it drains
+     the bar and gives it -hover too, hence div.star-rating in the counts. */
+  .star-rating-control > div.rating-cancel {
+    order: 1; float: none !important; width: 18px !important; height: 18px !important;
+    margin-left: 3px; text-indent: 0 !important; background: none !important;
+    font-size: 16px; line-height: 18px; text-align: center; color: var(--m-dim);
+  }
+  .star-rating-control > div.rating-cancel > a { display: none; }
+  .star-rating-control > div.rating-cancel::before { content: "×"; }
+  .star-rating-control > div.rating-cancel.star-rating-hover { color: var(--m-bad); }
+  /* star K is child K+1 — the cancel div always comes first */
+  .star-rating-control:has(> :is(.star-rating-on, .star-rating-hover):nth-child(2))  { --score: #e2483f; }
+  .star-rating-control:has(> :is(.star-rating-on, .star-rating-hover):nth-child(3))  { --score: #e45b3e; }
+  .star-rating-control:has(> :is(.star-rating-on, .star-rating-hover):nth-child(4))  { --score: #e76e3d; }
+  .star-rating-control:has(> :is(.star-rating-on, .star-rating-hover):nth-child(5))  { --score: #e3ad4b; }
+  .star-rating-control:has(> :is(.star-rating-on, .star-rating-hover):nth-child(6))  { --score: #e0d055; }
+  .star-rating-control:has(> :is(.star-rating-on, .star-rating-hover):nth-child(7))  { --score: #c0cd51; }
+  .star-rating-control:has(> :is(.star-rating-on, .star-rating-hover):nth-child(8))  { --score: #9fca4c; }
+  .star-rating-control:has(> :is(.star-rating-on, .star-rating-hover):nth-child(9))  { --score: #7dc54c; }
+  .star-rating-control:has(> :is(.star-rating-on, .star-rating-hover):nth-child(10)) { --score: #58bc51; }
+  .star-rating-control:has(> :is(.star-rating-on, .star-rating-hover):nth-child(11)) { --score: #34b355; }
+
   /* =====================================================================
      FORUMS — posts, avatars, signatures, popups
      ===================================================================== */
@@ -2122,9 +2212,6 @@
 
   div.pad.box[style="width: 100%"] {
     width: auto !important;
-  }
-  div.pad.box[style="width: 100%"] p[style="font-size: 12pt"] {
-    font-size: inherit !important;
   }
 
   div.contenth[style="color: #000;"] {
